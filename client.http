@@ -31,7 +31,7 @@ Authorization: Bearer {{authToken}}
 
 {
   "title": "What is the best programming language?",
-  "description": "I want to know what is the best programming language to learn in 2021"
+  "content": "I want to know what is the best programming language to learn in 2021"
 }
 
 
