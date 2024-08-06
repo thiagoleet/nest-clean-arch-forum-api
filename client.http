@@ -1,6 +1,7 @@
 @baseUrl = http://localhost:3333
+@authToken = {{authenticate.response.body.access_token}}
 
-# @name: Create account
+# @name create_account
 POST {{baseUrl}}/accounts
 Content-Type: application/json
 
@@ -12,12 +13,26 @@ Content-Type: application/json
 
 ###
 
-# @name: Authenticate
+# @name authenticate
 POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "email": "",
-  "password": ""
+  "email": "john.doe@email.com",
+  "password": "123456"
 }
+
+###
+
+# @name create_question
+POST {{baseUrl}}/questions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "What is the best programming language?",
+  "description": "I want to know what is the best programming language to learn in 2021"
+}
+
+
 
