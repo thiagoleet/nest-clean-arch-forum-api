@@ -30,9 +30,16 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "title": "What is the best programming language?",
+  "title": "What is the best programming language for mobile?",
   "content": "I want to know what is the best programming language to learn in 2021"
 }
+
+###
+
+# @name fetch_recent_questions
+GET {{baseUrl}}/questions?page=1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 
 
