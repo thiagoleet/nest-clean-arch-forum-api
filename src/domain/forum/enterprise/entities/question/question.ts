@@ -1,9 +1,9 @@
-import dayjs from "dayjs";
-import { AggregateRoot, UniqueEntityID } from "@/core/entities";
-import { Optional } from "@/core/types/optional";
-import { Slug } from "../value-objects";
-import { QuestionAttachmentList } from "./question-attachment-list";
-import { QuestionBestAnswerChoosenEvent } from "../../events";
+import dayjs from 'dayjs';
+import { AggregateRoot, UniqueEntityID } from '@/core/entities';
+import { Optional } from '@/core/types/optional';
+import { Slug } from '../value-objects';
+import { QuestionAttachmentList } from './question-attachment-list';
+import { QuestionBestAnswerChoosenEvent } from '../../events';
 
 export interface QuestionProps {
   authorId: UniqueEntityID;
@@ -25,45 +25,6 @@ export class Question extends AggregateRoot<QuestionProps> {
     return this.props.bestAnswerId;
   }
 
-  get title() {
-    return this.props.title;
-  }
-
-  get content() {
-    return this.props.content;
-  }
-
-  get slug() {
-    return this.props.slug;
-  }
-
-  get attachments() {
-    return this.props.attachments;
-  }
-
-  get createdAt() {
-    return this.props.createdAt;
-  }
-
-  get updatedAt() {
-    return this.props.updatedAt;
-  }
-
-  get isNew(): boolean {
-    return dayjs().diff(this.props.createdAt, "days") <= 3;
-  }
-
-  set title(value: string) {
-    this.props.title = value;
-    this.props.slug = Slug.createFromText(value);
-    this.touch();
-  }
-
-  set content(value: string) {
-    this.props.content = value;
-    this.touch();
-  }
-
   set bestAnswerId(value: UniqueEntityID | undefined) {
     if (value === undefined) {
       return;
@@ -80,14 +41,53 @@ export class Question extends AggregateRoot<QuestionProps> {
     this.touch();
   }
 
+  get title() {
+    return this.props.title;
+  }
+
+  set title(value: string) {
+    this.props.title = value;
+    this.props.slug = Slug.createFromText(value);
+    this.touch();
+  }
+
+  get content() {
+    return this.props.content;
+  }
+
+  set content(value: string) {
+    this.props.content = value;
+    this.touch();
+  }
+
+  get slug() {
+    return this.props.slug;
+  }
+
+  get attachments() {
+    return this.props.attachments;
+  }
+
   set attachments(value: QuestionAttachmentList) {
     this.props.attachments = value;
     this.touch();
   }
 
+  get createdAt() {
+    return this.props.createdAt;
+  }
+
+  get updatedAt() {
+    return this.props.updatedAt;
+  }
+
+  get isNew(): boolean {
+    return dayjs().diff(this.props.createdAt, 'days') <= 3;
+  }
+
   static create(
-    props: Optional<QuestionProps, "createdAt" | "slug" | "attachments">,
-    id?: UniqueEntityID
+    props: Optional<QuestionProps, 'createdAt' | 'slug' | 'attachments'>,
+    id?: UniqueEntityID,
   ): Question {
     const question = new Question(
       {
@@ -96,7 +96,7 @@ export class Question extends AggregateRoot<QuestionProps> {
         attachments: props.attachments ?? new QuestionAttachmentList(),
         createdAt: props.createdAt ?? new Date(),
       },
-      id
+      id,
     );
 
     return question;

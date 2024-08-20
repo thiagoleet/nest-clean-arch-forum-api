@@ -1,7 +1,7 @@
-import { AggregateRoot, UniqueEntityID } from "@/core/entities";
-import { Optional } from "@/core/types/optional";
-import { AnswerAttachmentList } from "./answer-attachment-list";
-import { AnswerCreatedEvent } from "../../events";
+import { AggregateRoot, UniqueEntityID } from '@/core/entities';
+import { Optional } from '@/core/types/optional';
+import { AnswerAttachmentList } from './answer-attachment-list';
+import { AnswerCreatedEvent } from '../../events';
 
 export interface AnswerProps {
   authorId: UniqueEntityID;
@@ -25,8 +25,18 @@ export class Answer extends AggregateRoot<AnswerProps> {
     return this.props.content;
   }
 
+  set content(value: string) {
+    this.props.content = value;
+    this.touch();
+  }
+
   get attachments() {
     return this.props.attachments;
+  }
+
+  set attachments(value: AnswerAttachmentList) {
+    this.props.attachments = value;
+    this.touch();
   }
 
   get createdAt() {
@@ -38,22 +48,12 @@ export class Answer extends AggregateRoot<AnswerProps> {
   }
 
   get excerpt(): string {
-    return this.props.content.substring(0, 120).trimEnd().concat("...");
-  }
-
-  set content(value: string) {
-    this.props.content = value;
-    this.touch();
-  }
-
-  set attachments(value: AnswerAttachmentList) {
-    this.props.attachments = value;
-    this.touch();
+    return this.props.content.substring(0, 120).trimEnd().concat('...');
   }
 
   static create(
-    props: Optional<AnswerProps, "createdAt" | "attachments">,
-    id?: UniqueEntityID
+    props: Optional<AnswerProps, 'createdAt' | 'attachments'>,
+    id?: UniqueEntityID,
   ): Answer {
     const answer = new Answer(
       {
@@ -61,7 +61,7 @@ export class Answer extends AggregateRoot<AnswerProps> {
         attachments: props.attachments ?? new AnswerAttachmentList(),
         createdAt: props.createdAt ?? new Date(),
       },
-      id
+      id,
     );
 
     const isNewAnswer = !id;

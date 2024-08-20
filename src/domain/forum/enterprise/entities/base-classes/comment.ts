@@ -18,17 +18,17 @@ export abstract class Comment<
     return this.props.content;
   }
 
+  set content(value: string) {
+    this.props.content = value;
+    this.touch();
+  }
+
   get createdAt() {
     return this.props.createdAt;
   }
 
   get updatedAt() {
     return this.props.updatedAt;
-  }
-
-  set content(value: string) {
-    this.props.content = value;
-    this.touch();
   }
 
   protected touch(): void {
