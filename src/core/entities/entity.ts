@@ -1,4 +1,4 @@
-import { UniqueEntityID } from "@/core/entities";
+import { UniqueEntityID } from '@/core/entities';
 
 export abstract class Entity<Props> {
   private _id: UniqueEntityID;
@@ -13,7 +13,7 @@ export abstract class Entity<Props> {
     this.props = props;
   }
 
-  public equals(entity: Entity<any>) {
+  public equals(entity: Entity<unknown>) {
     if (entity === this) {
       return true;
     }
