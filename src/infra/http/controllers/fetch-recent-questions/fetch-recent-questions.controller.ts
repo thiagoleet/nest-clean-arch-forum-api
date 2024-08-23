@@ -1,11 +1,11 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 
-import { PrismaService } from '@/prisma/prisma.service';
+import { PrismaService } from '@/infra/prisma/prisma.service';
 import {
   PageQueryParamsSchema,
   queryValidationPipe,
 } from './fetch-recent-questions.schema';
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard';
 
 @Controller('/questions')
 @UseGuards(JwtAuthGuard)

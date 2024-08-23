@@ -1,4 +1,4 @@
-import { ZodValidationPipe } from '@/pipes';
+import { ZodValidationPipe } from '../../pipes';
 import { z } from 'zod';
 
 export const pageQueryParamsSchema = z

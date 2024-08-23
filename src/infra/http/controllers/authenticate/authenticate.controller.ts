@@ -7,12 +7,12 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
-import { ZodValidationPipe } from '@/pipes';
 import {
   AuthenticateBodySchema,
   authenticateBodySchema,
 } from './authenticate.schema';
-import { PrismaService } from '@/prisma/prisma.service';
+import { PrismaService } from '@/infra/prisma/prisma.service';
+import { ZodValidationPipe } from '../../pipes';
 
 @Controller('/sessions')
 export class AuthenticateController {

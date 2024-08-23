@@ -1,13 +1,13 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { CurrentUser } from '@/auth/current-user.decorator';
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
-import { UserPayload } from '@/auth/token.schema';
+import { CurrentUser } from '@/infra/auth/current-user.decorator';
+import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard';
+import { UserPayload } from '@/infra/auth/token.schema';
 import {
   createQuestionBodySchema,
   CreateQuestionBodySchema,
 } from './create-question.schema';
-import { ZodValidationPipe } from '@/pipes';
-import { PrismaService } from '@/prisma/prisma.service';
+import { ZodValidationPipe } from '../../pipes';
+import { PrismaService } from '@/infra/prisma/prisma.service';
 
 const bodyValidationPipe = new ZodValidationPipe(createQuestionBodySchema);
 
