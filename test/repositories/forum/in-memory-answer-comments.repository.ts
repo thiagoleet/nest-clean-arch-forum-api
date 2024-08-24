@@ -2,12 +2,12 @@ import {
   calculateOffset,
   ITEMS_PER_PAGE,
   PaginationParams,
-} from "@/core/repositories/pagination-params";
-import { AnswerCommentRepository } from "@/domain/forum/application/repositories/answer-comments.repository";
-import { AnswerComment } from "@/domain/forum/enterprise/entities";
+} from '@/core/repositories/pagination-params';
+import { AnswerCommentsRepository } from '@/domain/forum/application/repositories/answer-comments.repository';
+import { AnswerComment } from '@/domain/forum/enterprise/entities';
 
 export class InMemoryAnswerCommentsRepository
-  implements AnswerCommentRepository
+  implements AnswerCommentsRepository
 {
   private _items: AnswerComment[] = [];
 
@@ -29,7 +29,7 @@ export class InMemoryAnswerCommentsRepository
 
   async findManyByAnswerId(
     answerId: string,
-    params: PaginationParams
+    params: PaginationParams,
   ): Promise<AnswerComment[]> {
     const comments = this._items
       .filter((item) => item.answerId.toString() === answerId)

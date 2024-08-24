@@ -1,6 +1,6 @@
-import { Either, left, right } from "@/core/either";
-import { QuestionCommentRepository } from "../../repositories/question-comments.repository";
-import { NotAllowedError, ResourceNotFoundError } from "@/core/errors";
+import { Either, left, right } from '@/core/either';
+import { QuestionCommentsRepository } from '../../repositories/question-comments.repository';
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
 
 interface DeleteQuestionCommentInput {
   authorId: string;
@@ -13,7 +13,7 @@ type DeleteQuestionCommentResponse = Either<
 >;
 
 export class DeleteQuestionCommentUseCase {
-  constructor(private repository: QuestionCommentRepository) {}
+  constructor(private repository: QuestionCommentsRepository) {}
 
   async execute({
     authorId,
@@ -22,7 +22,7 @@ export class DeleteQuestionCommentUseCase {
     const comment = await this.repository.findById(questionCommentId);
 
     if (!comment) {
-      return left(new ResourceNotFoundError("Comment not found"));
+      return left(new ResourceNotFoundError('Comment not found'));
     }
 
     if (comment.authorId.toString() !== authorId) {

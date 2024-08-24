@@ -1,12 +1,12 @@
-import { PaginationParams } from "@/core/repositories/pagination-params";
-import { AnswerComment } from "../../enterprise/entities";
+import { PaginationParams } from '@/core/repositories/pagination-params';
+import { AnswerComment } from '../../enterprise/entities';
 
-export interface AnswerCommentRepository {
+export interface AnswerCommentsRepository {
   create(comment: AnswerComment): Promise<void>;
   findById(id: string): Promise<AnswerComment | null>;
   delete(comment: AnswerComment): Promise<void>;
   findManyByAnswerId(
     answerId: string,
-    params: PaginationParams
+    params: PaginationParams,
   ): Promise<AnswerComment[]>;
 }

@@ -1,5 +1,5 @@
-import { QuestionAttachmentsRepository } from "@/domain/forum/application/repositories/question-attachments.repository";
-import { QuestionAttachment } from "@/domain/forum/enterprise/entities";
+import { QuestionAttachmentsRepository } from '@/domain/forum/application/repositories/question-attachments.repository';
+import { QuestionAttachment } from '@/domain/forum/enterprise/entities';
 
 export class InMemoryQuestionAttachmentsRepository
   implements QuestionAttachmentsRepository
@@ -15,16 +15,16 @@ export class InMemoryQuestionAttachmentsRepository
   }
 
   async findManyByQuestionId(
-    questionId: string
+    questionId: string,
   ): Promise<QuestionAttachment[]> {
     return this._items.filter(
-      (item) => item.questionId.toString() === questionId
+      (item) => item.questionId.toString() === questionId,
     );
   }
 
   async deleteManyByQuestionId(questionId: string): Promise<void> {
     this._items = this._items.filter(
-      (item) => item.questionId.toString() !== questionId
+      (item) => item.questionId.toString() !== questionId,
     );
   }
 }

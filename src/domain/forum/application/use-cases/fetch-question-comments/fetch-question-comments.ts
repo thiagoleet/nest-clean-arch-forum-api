@@ -1,5 +1,5 @@
-import { QuestionComment } from "@/domain/forum/enterprise/entities";
-import { QuestionCommentRepository } from "../../repositories/question-comments.repository";
+import { QuestionComment } from '@/domain/forum/enterprise/entities';
+import { QuestionCommentsRepository } from '../../repositories/question-comments.repository';
 
 interface FetchQuestionCommentsInput {
   page: number;
@@ -11,7 +11,7 @@ interface FetchQuestionCommentsResponse {
 }
 
 export class FetchQuestionCommentsUseCase {
-  constructor(private repository: QuestionCommentRepository) {}
+  constructor(private repository: QuestionCommentsRepository) {}
 
   async execute({
     questionId,

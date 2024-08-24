@@ -1,9 +1,9 @@
-import { AnswerComment } from "@/domain/forum/enterprise/entities";
-import { UniqueEntityID } from "@/core/entities";
-import { AnswersRepository } from "../../repositories/answers.repository";
-import { AnswerCommentRepository } from "../../repositories/answer-comments.repository";
-import { Either, left, right } from "@/core/either";
-import { ResourceNotFoundError } from "@/core/errors";
+import { AnswerComment } from '@/domain/forum/enterprise/entities';
+import { UniqueEntityID } from '@/core/entities';
+import { AnswersRepository } from '../../repositories/answers.repository';
+import { AnswerCommentsRepository } from '../../repositories/answer-comments.repository';
+import { Either, left, right } from '@/core/either';
+import { ResourceNotFoundError } from '@/core/errors';
 
 interface CommentOnAnswerInput {
   authorId: string;
@@ -20,8 +20,8 @@ type CommentOnAnswerResponse = Either<
 
 export class CommentOnAnswerUseCase {
   constructor(
-    private answerCommentsRepository: AnswerCommentRepository,
-    private answerssRepository: AnswersRepository
+    private answerCommentsRepository: AnswerCommentsRepository,
+    private answerssRepository: AnswersRepository,
   ) {}
 
   async execute({
@@ -32,7 +32,7 @@ export class CommentOnAnswerUseCase {
     const answer = await this.answerssRepository.findById(answerId);
 
     if (!answer) {
-      return left(new ResourceNotFoundError("Answer not found"));
+      return left(new ResourceNotFoundError('Answer not found'));
     }
 
     const comment = AnswerComment.create({

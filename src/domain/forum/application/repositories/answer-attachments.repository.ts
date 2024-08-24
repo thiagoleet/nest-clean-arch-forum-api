@@ -1,4 +1,4 @@
-import { AnswerAttachment } from "../../enterprise/entities";
+import { AnswerAttachment } from '../../enterprise/entities';
 
 export interface AnswerAttachmentsRepository {
   create(attachment: AnswerAttachment): Promise<void>;

@@ -7,7 +7,7 @@ import {
   CreateQuestionBodySchema,
 } from './create-question.schema';
 import { ZodValidationPipe } from '../../pipes';
-import { PrismaService } from '@/infra/prisma/prisma.service';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 
 const bodyValidationPipe = new ZodValidationPipe(createQuestionBodySchema);
 
