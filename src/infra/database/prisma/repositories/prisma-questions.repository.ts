@@ -4,7 +4,7 @@ import { QuestionsRepository } from '@/domain/forum/application/repositories/que
 import { Question } from '@/domain/forum/enterprise/entities';
 
 @Injectable()
-class PrismaQuestionsRepository implements QuestionsRepository {
+export class PrismaQuestionsRepository implements QuestionsRepository {
   create(question: Question): Promise<void> {
     throw new Error('Method not implemented.');
   }
