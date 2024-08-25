@@ -1,29 +1,25 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import {
   PageQueryParamsSchema,
   queryValidationPipe,
 } from './fetch-recent-questions.schema';
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard';
+import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions';
 
 @Controller('/questions')
 @UseGuards(JwtAuthGuard)
 export class FetchRecentQuestionsController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private useCase: FetchRecentQuestionsUseCase) {}
 
   @Get()
   async handle(
     @Query('page', queryValidationPipe) page: PageQueryParamsSchema,
   ) {
-    const itemsPerPage = 10;
+    const itemsPerPage = 20;
 
-    const questions = await this.prisma.question.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: itemsPerPage,
-      skip: (page - 1) * itemsPerPage,
+    const { questions } = await this.useCase.execute({
+      page,
     });
 
     return { questions, page, itemsPerPage };

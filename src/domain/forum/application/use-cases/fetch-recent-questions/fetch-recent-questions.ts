@@ -1,5 +1,6 @@
-import { Question } from "@/domain/forum/enterprise/entities";
-import { QuestionsRepository } from "../../repositories/questions.repository";
+import { Question } from '@/domain/forum/enterprise/entities';
+import { QuestionsRepository } from '../../repositories/questions.repository';
+import { Injectable } from '@nestjs/common';
 
 interface FetchRecentQuestionsInput {
   page: number;
@@ -10,6 +11,7 @@ interface FetchRecentQuestionsResponse {
   page: number;
 }
 
+@Injectable()
 export class FetchRecentQuestionsUseCase {
   constructor(private repository: QuestionsRepository) {}
 
