@@ -2,10 +2,11 @@ import {
   Question,
   QuestionAttachment,
   QuestionAttachmentList,
-} from "@/domain/forum/enterprise/entities";
-import { QuestionsRepository } from "../../repositories/questions.repository";
-import { UniqueEntityID } from "@/core/entities";
-import { Either, right } from "@/core/either";
+} from '@/domain/forum/enterprise/entities';
+import { QuestionsRepository } from '../../repositories/questions.repository';
+import { UniqueEntityID } from '@/core/entities';
+import { Either, right } from '@/core/either';
+import { Injectable } from '@nestjs/common';
 
 interface CreateQuestionInput {
   authorId: string;
@@ -16,6 +17,7 @@ interface CreateQuestionInput {
 
 type CreateQuestionResponse = Either<null, { question: Question }>;
 
+@Injectable()
 export class CreateQuestionUseCase {
   constructor(private repository: QuestionsRepository) {}
 
@@ -35,7 +37,7 @@ export class CreateQuestionUseCase {
       QuestionAttachment.create({
         attachmentId: new UniqueEntityID(attachmentId),
         questionId: question.id,
-      })
+      }),
     );
 
     question.attachments = new QuestionAttachmentList(attachments);
