@@ -7,13 +7,13 @@ import { QuestionBestAnswerChoosenEvent } from '../../events';
 
 export interface QuestionProps {
   authorId: UniqueEntityID;
-  bestAnswerId?: UniqueEntityID;
+  bestAnswerId?: UniqueEntityID | null;
   title: string;
   content: string;
   slug: Slug;
   attachments: QuestionAttachmentList;
   createdAt: Date;
-  updatedAt?: Date;
+  updatedAt?: Date | null;
 }
 
 export class Question extends AggregateRoot<QuestionProps> {
@@ -25,15 +25,8 @@ export class Question extends AggregateRoot<QuestionProps> {
     return this.props.bestAnswerId;
   }
 
-  set bestAnswerId(value: UniqueEntityID | undefined) {
-    if (value === undefined) {
-      return;
-    }
-
-    if (
-      this.props.bestAnswerId === undefined ||
-      !this.props.bestAnswerId.equals(value)
-    ) {
+  set bestAnswerId(value: UniqueEntityID | undefined | null) {
+    if (value && value !== this.props.bestAnswerId) {
       this.addDomainEvent(new QuestionBestAnswerChoosenEvent(this, value));
     }
 

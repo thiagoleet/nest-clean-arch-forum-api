@@ -1,12 +1,12 @@
-import { DomainEvents } from "@/core/events";
+import { DomainEvents } from '@/core/events';
 import {
   calculateOffset,
   ITEMS_PER_PAGE,
   PaginationParams,
-} from "@/core/repositories/pagination-params";
-import { AnswerAttachmentsRepository } from "@/domain/forum/application/repositories/answer-attachments.repository";
-import { AnswersRepository } from "@/domain/forum/application/repositories/answers.repository";
-import { Answer } from "@/domain/forum/enterprise/entities";
+} from '@/core/repositories/pagination-params';
+import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments.repository';
+import { AnswersRepository } from '@/domain/forum/application/repositories/answers.repository';
+import { Answer } from '@/domain/forum/enterprise/entities';
 
 export class InMemoryAnswersRepository implements AnswersRepository {
   private _items: Answer[];
@@ -32,13 +32,13 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     this._items = this._items.filter((item) => item.id !== answer.id);
 
     await this.attachmentsRepository?.deleteManyByAnswerId(
-      answer.id.toString()
+      answer.id.toString(),
     );
   }
 
   async findManyByQuestionId(
     questionId: string,
-    params: PaginationParams
+    params: PaginationParams,
   ): Promise<Answer[]> {
     const answers = this.items
       .filter((item) => item.questionId.toString() === questionId)

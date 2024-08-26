@@ -1,5 +1,5 @@
-import { AnswerComment } from "@/domain/forum/enterprise/entities";
-import { AnswerCommentRepository } from "../../repositories/answer-comments.repository";
+import { AnswerComment } from '@/domain/forum/enterprise/entities';
+import { AnswerCommentsRepository } from '../../repositories/answer-comments.repository';
 
 interface FetchAnswerCommentsInput {
   page: number;
@@ -11,7 +11,7 @@ interface FetchAnswerCommentsResponse {
 }
 
 export class FetchAnswerCommentsUseCase {
-  constructor(private repository: AnswerCommentRepository) {}
+  constructor(private repository: AnswerCommentsRepository) {}
 
   async execute({
     answerId,

@@ -1,5 +1,5 @@
-import { AnswerAttachmentsRepository } from "@/domain/forum/application/repositories/answer-attachments.repository";
-import { AnswerAttachment } from "@/domain/forum/enterprise/entities";
+import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments.repository';
+import { AnswerAttachment } from '@/domain/forum/enterprise/entities';
 
 export class InMemoryAnswerAttachmentsRepository
   implements AnswerAttachmentsRepository
@@ -20,7 +20,7 @@ export class InMemoryAnswerAttachmentsRepository
 
   async deleteManyByAnswerId(answerId: string): Promise<void> {
     this._items = this._items.filter(
-      (item) => item.answerId.toString() !== answerId
+      (item) => item.answerId.toString() !== answerId,
     );
   }
 }

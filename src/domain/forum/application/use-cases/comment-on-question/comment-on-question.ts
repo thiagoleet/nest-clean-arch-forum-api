@@ -1,9 +1,9 @@
-import { QuestionComment } from "@/domain/forum/enterprise/entities";
-import { UniqueEntityID } from "@/core/entities";
-import { QuestionsRepository } from "../../repositories/questions.repository";
-import { QuestionCommentRepository } from "../../repositories/question-comments.repository";
-import { Either, left, right } from "@/core/either";
-import { ResourceNotFoundError } from "@/core/errors";
+import { QuestionComment } from '@/domain/forum/enterprise/entities';
+import { UniqueEntityID } from '@/core/entities';
+import { QuestionsRepository } from '../../repositories/questions.repository';
+import { QuestionCommentsRepository } from '../../repositories/question-comments.repository';
+import { Either, left, right } from '@/core/either';
+import { ResourceNotFoundError } from '@/core/errors';
 
 interface CommentOnQuestionInput {
   authorId: string;
@@ -18,8 +18,8 @@ type CommentOnQuestionResponse = Either<
 
 export class CommentOnQuestionUseCase {
   constructor(
-    private questionCommentsRepository: QuestionCommentRepository,
-    private questionsRepository: QuestionsRepository
+    private questionCommentsRepository: QuestionCommentsRepository,
+    private questionsRepository: QuestionsRepository,
   ) {}
 
   async execute({
@@ -30,7 +30,7 @@ export class CommentOnQuestionUseCase {
     const question = await this.questionsRepository.findById(questionId);
 
     if (!question) {
-      return left(new ResourceNotFoundError("Question not found"));
+      return left(new ResourceNotFoundError('Question not found'));
     }
 
     const comment = QuestionComment.create({

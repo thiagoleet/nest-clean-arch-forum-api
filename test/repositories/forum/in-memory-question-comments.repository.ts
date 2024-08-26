@@ -2,12 +2,12 @@ import {
   calculateOffset,
   ITEMS_PER_PAGE,
   PaginationParams,
-} from "@/core/repositories/pagination-params";
-import { QuestionCommentRepository } from "@/domain/forum/application/repositories/question-comments.repository";
-import { QuestionComment } from "@/domain/forum/enterprise/entities";
+} from '@/core/repositories/pagination-params';
+import { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments.repository';
+import { QuestionComment } from '@/domain/forum/enterprise/entities';
 
 export class InMemoryQuestionCommentsRepository
-  implements QuestionCommentRepository
+  implements QuestionCommentsRepository
 {
   private _items: QuestionComment[] = [];
 
@@ -25,13 +25,13 @@ export class InMemoryQuestionCommentsRepository
 
   async delete(comment: QuestionComment): Promise<void> {
     this._items = this._items.filter(
-      (item) => item.id.toString() !== comment.id.toString()
+      (item) => item.id.toString() !== comment.id.toString(),
     );
   }
 
   async findManyByQuestionId(
     questionId: string,
-    params: PaginationParams
+    params: PaginationParams,
   ): Promise<QuestionComment[]> {
     const comments = this._items
       .filter((item) => item.questionId.toString() === questionId)

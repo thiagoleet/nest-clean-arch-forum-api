@@ -11,7 +11,7 @@ import {
   AuthenticateBodySchema,
   authenticateBodySchema,
 } from './authenticate.schema';
-import { PrismaService } from '@/infra/prisma/prisma.service';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { ZodValidationPipe } from '../../pipes';
 
 @Controller('/sessions')

@@ -7,14 +7,14 @@ import {
   CreateQuestionBodySchema,
 } from './create-question.schema';
 import { ZodValidationPipe } from '../../pipes';
-import { PrismaService } from '@/infra/prisma/prisma.service';
+import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question';
 
 const bodyValidationPipe = new ZodValidationPipe(createQuestionBodySchema);
 
 @Controller('/questions')
 @UseGuards(JwtAuthGuard)
 export class CreateQuestionController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private useCase: CreateQuestionUseCase) {}
 
   @Post()
   async handle(
@@ -23,27 +23,11 @@ export class CreateQuestionController {
   ) {
     const { title, content } = body;
 
-    await this.prisma.question.create({
-      data: {
-        title,
-        content,
-        slug: this.convertToSlug(title),
-        authorId: user.sub,
-      },
+    await this.useCase.execute({
+      title,
+      content,
+      authorId: user.sub,
+      attachmentIds: [],
     });
-  }
-
-  private convertToSlug(text: string): string {
-    const slugText = text
-      .normalize('NFKD')
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-')
-      .replace(/[^\w-]+/g, '')
-      .replace(/_/g, '-')
-      .replace(/--+/g, '-')
-      .replace(/-$/g, '');
-
-    return slugText;
   }
 }

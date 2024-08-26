@@ -1,12 +1,12 @@
-import { DomainEvents } from "@/core/events";
+import { DomainEvents } from '@/core/events';
 import {
   calculateOffset,
   ITEMS_PER_PAGE,
   PaginationParams,
-} from "@/core/repositories/pagination-params";
-import { QuestionAttachmentsRepository } from "@/domain/forum/application/repositories/question-attachments.repository";
-import { QuestionsRepository } from "@/domain/forum/application/repositories/questions.repository";
-import { Question } from "@/domain/forum/enterprise/entities";
+} from '@/core/repositories/pagination-params';
+import { QuestionAttachmentsRepository } from '@/domain/forum/application/repositories/question-attachments.repository';
+import { QuestionsRepository } from '@/domain/forum/application/repositories/questions.repository';
+import { Question } from '@/domain/forum/enterprise/entities';
 
 export class InMemoryQuestionsRepository implements QuestionsRepository {
   private _items: Question[];
@@ -28,7 +28,7 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     this._items = this._items.filter((item) => item.id !== question.id);
 
     await this.attachmentsRepository?.deleteManyByQuestionId(
-      question.id.toString()
+      question.id.toString(),
     );
   }
 
