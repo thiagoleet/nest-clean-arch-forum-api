@@ -30,7 +30,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "title": "What is the best programming language for mobile?",
+  "title": "What is the best programming language for desktop?",
   "content": "I want to know what is the best programming language to learn in 2021"
 }
 

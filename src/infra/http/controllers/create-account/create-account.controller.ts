@@ -1,18 +1,31 @@
+// Nest
 import {
   BadRequestException,
   ConflictException,
   UsePipes,
 } from '@nestjs/common';
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+
+// Schemas
 import {
   createAccountBodySchema,
   CreateAccountBodySchema,
 } from './create-account.schema';
+
+// Pipes
 import { ZodValidationPipe } from '../../pipes';
+
+// Use cases
 import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/register-student';
+
+// Errors
 import { StudentAlreadyExistsError } from '@/domain/forum/application/errors';
 
+// Decorators
+import { Public } from '@/infra/auth/public';
+
 @Controller('/accounts')
+@Public()
 export class CreateAccountController {
   constructor(private registerStudent: RegisterStudentUseCase) {}
 
