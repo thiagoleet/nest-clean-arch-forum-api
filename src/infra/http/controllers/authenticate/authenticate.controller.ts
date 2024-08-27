@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Post,
@@ -12,6 +13,7 @@ import {
   authenticateBodySchema,
 } from './authenticate.schema';
 import { ZodValidationPipe } from '../../pipes';
+import { WrongCredentialsError } from '@/domain/forum/application/errors';
 
 @Controller('/sessions')
 export class AuthenticateController {
@@ -25,7 +27,14 @@ export class AuthenticateController {
     const result = await this.authenicateStudent.execute({ email, password });
 
     if (result.isLeft()) {
-      throw new UnauthorizedException();
+      const error = result.value;
+
+      switch (error.constructor) {
+        case WrongCredentialsError:
+          throw new UnauthorizedException(error.message);
+        default:
+          throw new BadRequestException(error.message);
+      }
     }
 
     const { accessToken } = result.value;
