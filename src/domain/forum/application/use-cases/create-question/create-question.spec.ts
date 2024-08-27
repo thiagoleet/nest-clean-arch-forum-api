@@ -1,9 +1,9 @@
-import { InMemoryQuestionsRepository } from "test/repositories/forum/in-memory-questions.repository";
-import { CreateQuestionUseCase } from "./create-question";
-import { Question } from "@/domain/forum/enterprise/entities";
-import { UniqueEntityID } from "@/core/entities";
+import { InMemoryQuestionsRepository } from 'test/repositories/forum/in-memory-questions.repository';
+import { CreateQuestionUseCase } from './create-question';
+import { Question } from '@/domain/forum/enterprise/entities';
+import { UniqueEntityID } from '@/core/entities';
 
-describe("CreateQuestionUseCase", () => {
+describe('CreateQuestionUseCase', () => {
   let repository: InMemoryQuestionsRepository;
   let sut: CreateQuestionUseCase;
 
@@ -12,12 +12,12 @@ describe("CreateQuestionUseCase", () => {
     sut = new CreateQuestionUseCase(repository);
   });
 
-  it("should be able to create an answer question", async () => {
+  it('should be able to create an answer question', async () => {
     const { value } = await sut.execute({
-      authorId: "instructor-id",
-      title: "New Question",
-      content: "Content",
-      attachmentIds: ["attachment-id-1", "attachment-id-2"],
+      authorId: 'instructor-id',
+      title: 'New Question',
+      content: 'Content',
+      attachmentIds: ['attachment-id-1', 'attachment-id-2'],
     });
 
     const { question } = value as { question: Question };
@@ -28,10 +28,10 @@ describe("CreateQuestionUseCase", () => {
     expect(item.attachments.currentItems).toHaveLength(2);
     expect(item.attachments.currentItems).toEqual([
       expect.objectContaining({
-        attachmentId: new UniqueEntityID("attachment-id-1"),
+        attachmentId: new UniqueEntityID('attachment-id-1'),
       }),
       expect.objectContaining({
-        attachmentId: new UniqueEntityID("attachment-id-2"),
+        attachmentId: new UniqueEntityID('attachment-id-2'),
       }),
     ]);
   });
