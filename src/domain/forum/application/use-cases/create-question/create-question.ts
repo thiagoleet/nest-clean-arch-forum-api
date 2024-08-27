@@ -15,7 +15,7 @@ interface CreateQuestionInput {
   attachmentIds: string[];
 }
 
-type CreateQuestionResponse = Either<null, { question: Question }>;
+type CreateQuestionResponse = Either<Error, { question: Question }>;
 
 @Injectable()
 export class CreateQuestionUseCase {

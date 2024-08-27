@@ -1,4 +1,10 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 
 import {
   PageQueryParamsSchema,
@@ -25,8 +31,7 @@ export class FetchRecentQuestionsController {
     });
 
     if (result.isLeft()) {
-      // TODO: Implement an Error
-      throw new Error('Unexpected error');
+      throw new BadRequestException(result.value.message);
     }
 
     const { questions } = result.value;
