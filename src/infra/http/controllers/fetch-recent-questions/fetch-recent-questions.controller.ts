@@ -1,21 +1,19 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+// Nest
+import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
 
+// Schemas
 import {
   PageQueryParamsSchema,
   queryValidationPipe,
 } from './fetch-recent-questions.schema';
-import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard';
+
+// Use cases
 import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions';
+
+// Presenters
 import { QuestionPresenter } from '../../presenters/question.presenter';
 
 @Controller('/questions')
-@UseGuards(JwtAuthGuard)
 export class FetchRecentQuestionsController {
   constructor(private useCase: FetchRecentQuestionsUseCase) {}
 
