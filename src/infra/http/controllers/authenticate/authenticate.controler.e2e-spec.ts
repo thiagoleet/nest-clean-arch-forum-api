@@ -20,7 +20,7 @@ describe('[E2E] AuthenticateController', () => {
     await app.init();
   });
 
-  test(`/POST SESSION`, async () => {
+  test(`[POST] SESSION`, async () => {
     const user = {
       name: 'John Doe',
       email: 'johndoe@example.com',
@@ -41,9 +41,9 @@ describe('[E2E] AuthenticateController', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty('access_token');
+    expect(response.body).toHaveProperty('accessToken');
     expect(response.body).toMatchObject({
-      access_token: expect.any(String),
+      accessToken: expect.any(String),
     });
   });
 });

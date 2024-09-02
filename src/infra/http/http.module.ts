@@ -10,26 +10,30 @@ import { AuthenticateController } from './controllers/authenticate';
 import { CreateAccountController } from './controllers/create-account';
 import { CreateQuestionController } from './controllers/create-question';
 import { FetchRecentQuestionsController } from './controllers/fetch-recent-questions';
+import { GetQuestionBySlugController } from './controllers/get-question-by-slug';
 
 // providers
+import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases/authenticate-student';
 import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question';
 import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions';
+import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/getQuestionBySlug';
 import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/register-student';
-import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases/authenticate-student';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
   controllers: [
-    CreateAccountController,
     AuthenticateController,
+    CreateAccountController,
     CreateQuestionController,
     FetchRecentQuestionsController,
+    GetQuestionBySlugController,
   ],
   providers: [
+    AuthenticateStudentUseCase,
     CreateQuestionUseCase,
     FetchRecentQuestionsUseCase,
+    GetQuestionBySlugUseCase,
     RegisterStudentUseCase,
-    AuthenticateStudentUseCase,
   ],
 })
 export class HttpModule {}

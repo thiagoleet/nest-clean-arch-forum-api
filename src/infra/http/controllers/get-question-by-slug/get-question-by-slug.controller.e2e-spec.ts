@@ -6,7 +6,7 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 
-describe('[E2E] FetchRecentQuestionsController', () => {
+describe('[E2E] GetQuestionBySlugController', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let jwt: JwtService;
@@ -23,7 +23,7 @@ describe('[E2E] FetchRecentQuestionsController', () => {
     await app.init();
   });
 
-  test(`[GET] questions`, async () => {
+  test(`[GET] questions/:slug`, async () => {
     const user = {
       name: 'John Doe',
       email: 'johndoe@example.com',
@@ -40,44 +40,27 @@ describe('[E2E] FetchRecentQuestionsController', () => {
 
     const accessToken = jwt.sign({ sub: userCreated.id });
 
-    const questions: {
-      title: string;
-      slug: string;
-      content: string;
-      authorId: string;
-    }[] = [];
+    const question = {
+      title: 'Question Created',
+      slug: 'question-created',
+      content: 'Content',
+      authorId: userCreated.id,
+    };
 
-    for (let i = 1; i <= 3; i++) {
-      questions.push({
-        title: `Question ${i}`,
-        slug: `question-${i}`,
-        content: `Content ${i}`,
-        authorId: userCreated.id,
-      });
-    }
-
-    await prisma.question.createMany({
-      data: questions,
+    await prisma.question.create({
+      data: question,
     });
 
     const response = await request(app.getHttpServer())
-      .get('/questions')
+      .get('/questions/question-created')
       .set('Authorization', `Bearer ${accessToken}`)
       .send();
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toMatchObject({
-      questions: [
-        expect.objectContaining({
-          title: 'Question 1',
-        }),
-        expect.objectContaining({
-          title: 'Question 2',
-        }),
-        expect.objectContaining({
-          title: 'Question 3',
-        }),
-      ],
+      question: expect.objectContaining({
+        title: 'Question Created',
+      }),
     });
   });
 
