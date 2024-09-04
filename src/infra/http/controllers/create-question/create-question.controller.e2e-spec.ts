@@ -28,7 +28,7 @@ describe('[E2E] CreateQuestionController', () => {
     await app.init();
   });
 
-  test(`/GET questions`, async () => {
+  test(`[POST] questions`, async () => {
     const user = await studentFactory.makePrismaStudent({
       name: 'John Doe',
       email: 'johndoe@example.com',

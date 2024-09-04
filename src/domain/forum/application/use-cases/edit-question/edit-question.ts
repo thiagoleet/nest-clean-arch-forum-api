@@ -1,13 +1,14 @@
-import { Either, left, right } from "@/core/either";
-import { QuestionAttachmentsRepository } from "../../repositories/question-attachments.repository";
-import { QuestionsRepository } from "../../repositories/questions.repository";
-import { NotAllowedError, ResourceNotFoundError } from "@/core/errors";
+import { Either, left, right } from '@/core/either';
+import { QuestionAttachmentsRepository } from '../../repositories/question-attachments.repository';
+import { QuestionsRepository } from '../../repositories/questions.repository';
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
 import {
   Question,
   QuestionAttachment,
   QuestionAttachmentList,
-} from "@/domain/forum/enterprise/entities";
-import { UniqueEntityID } from "@/core/entities";
+} from '@/domain/forum/enterprise/entities';
+import { UniqueEntityID } from '@/core/entities';
+import { Injectable } from '@nestjs/common';
 
 interface EditQuestionInput {
   authorId: string;
@@ -17,12 +18,16 @@ interface EditQuestionInput {
   attachmentIds: string[];
 }
 
-type EditQuestionResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
+type EditQuestionResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  unknown
+>;
 
+@Injectable()
 export class EditQuestionUseCase {
   constructor(
     private repository: QuestionsRepository,
-    private attachmentsRepository: QuestionAttachmentsRepository
+    private attachmentsRepository: QuestionAttachmentsRepository,
   ) {}
 
   async execute({
@@ -35,7 +40,7 @@ export class EditQuestionUseCase {
     const question = await this.repository.findById(questionId);
 
     if (!question) {
-      return left(new ResourceNotFoundError("Question not found"));
+      return left(new ResourceNotFoundError('Question not found'));
     }
 
     if (authorId != question.authorId.toString()) {
@@ -56,15 +61,15 @@ export class EditQuestionUseCase {
 
   private async handleAttachments(
     question: Question,
-    attachmentIds: string[]
+    attachmentIds: string[],
   ): Promise<QuestionAttachmentList> {
     const currentQuestionAttachments =
       await this.attachmentsRepository.findManyByQuestionId(
-        question.id.toString()
+        question.id.toString(),
       );
 
     const questionAttachmentList = new QuestionAttachmentList(
-      currentQuestionAttachments
+      currentQuestionAttachments,
     );
     const questionAttachments = attachmentIds.map((attachmentId) => {
       return QuestionAttachment.create({
