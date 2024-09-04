@@ -2,53 +2,41 @@ import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '@/infra/app.module';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { StudentFactory } from 'test/factories/forum/make-sutdent';
+import { DatabaseModule } from '@/infra/database/database.module';
+import { QuestionFactory } from 'test/factories/forum/make-question';
+import { Slug } from '@/domain/forum/enterprise/entities/value-objects';
 
 describe('[E2E] GetQuestionBySlugController', () => {
   let app: INestApplication;
-  let prisma: PrismaService;
   let jwt: JwtService;
+  let studentFactory: StudentFactory;
+  let questionFactory: QuestionFactory;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, DatabaseModule],
+      providers: [StudentFactory, QuestionFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
-    prisma = moduleRef.get<PrismaService>(PrismaService);
+    studentFactory = moduleRef.get<StudentFactory>(StudentFactory);
+    questionFactory = moduleRef.get<QuestionFactory>(QuestionFactory);
     jwt = moduleRef.get<JwtService>(JwtService);
 
     await app.init();
   });
 
   test(`[GET] questions/:slug`, async () => {
-    const user = {
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      password: '123456',
-    };
+    const user = await studentFactory.makePrismaStudent();
 
-    const userCreated = await prisma.user.create({
-      data: {
-        name: user.name,
-        email: user.email,
-        password: await hash(user.password, 8),
-      },
-    });
+    const accessToken = jwt.sign({ sub: user.id.toString() });
 
-    const accessToken = jwt.sign({ sub: userCreated.id });
-
-    const question = {
+    await questionFactory.makePrismaQuestion({
+      authorId: user.id,
+      slug: Slug.create('question-created'),
       title: 'Question Created',
-      slug: 'question-created',
-      content: 'Content',
-      authorId: userCreated.id,
-    };
-
-    await prisma.question.create({
-      data: question,
     });
 
     const response = await request(app.getHttpServer())
