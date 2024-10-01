@@ -12,6 +12,7 @@ import { CreateQuestionController } from './controllers/create-question';
 import { EditQuestionController } from './controllers/edit-question';
 import { FetchRecentQuestionsController } from './controllers/fetch-recent-questions';
 import { GetQuestionBySlugController } from './controllers/get-question-by-slug';
+import { DeleteQuestionController } from './controllers/delete-question';
 
 // providers
 import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases/authenticate-student';
@@ -20,6 +21,7 @@ import { EditQuestionUseCase } from '@/domain/forum/application/use-cases/edit-q
 import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions';
 import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/getQuestionBySlug';
 import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/register-student';
+import { DeleteQuestionUseCase } from '@/domain/forum/application/use-cases/delete-question';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -27,6 +29,7 @@ import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/reg
     AuthenticateController,
     CreateAccountController,
     CreateQuestionController,
+    DeleteQuestionController,
     EditQuestionController,
     FetchRecentQuestionsController,
     GetQuestionBySlugController,
@@ -34,6 +37,7 @@ import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/reg
   providers: [
     AuthenticateStudentUseCase,
     CreateQuestionUseCase,
+    DeleteQuestionUseCase,
     EditQuestionUseCase,
     FetchRecentQuestionsUseCase,
     GetQuestionBySlugUseCase,
