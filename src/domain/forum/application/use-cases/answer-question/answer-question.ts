@@ -1,21 +1,23 @@
-import { Either, right } from "@/core/either";
+import { Either, right } from '@/core/either';
+import { Injectable } from '@nestjs/common';
 import {
   Answer,
   AnswerAttachment,
   AnswerAttachmentList,
-} from "@/domain/forum/enterprise/entities";
-import { UniqueEntityID } from "@/core/entities";
-import { AnswersRepository } from "../../repositories/answers.repository";
+} from '@/domain/forum/enterprise/entities';
+import { UniqueEntityID } from '@/core/entities';
+import { AnswersRepository } from '../../repositories/answers.repository';
 
-interface AnswerQuestionInput {
+export interface AnswerQuestionInput {
   authorId: string;
   questionId: string;
   content: string;
   attachmentIds: string[];
 }
 
-type AnswerQuestionResponse = Either<null, { answer: Answer }>;
+export type AnswerQuestionResponse = Either<null, { answer: Answer }>;
 
+@Injectable()
 export class AnswerQuestionUseCase {
   constructor(private repository: AnswersRepository) {}
 
@@ -35,7 +37,7 @@ export class AnswerQuestionUseCase {
       AnswerAttachment.create({
         attachmentId: new UniqueEntityID(attachmentId),
         answerId: answer.id,
-      })
+      }),
     );
 
     answer.attachments = new AnswerAttachmentList(attachments);

@@ -1,13 +1,15 @@
-import { Either, left, right } from "@/core/either";
-import { UniqueEntityID } from "@/core/entities";
-import { NotAllowedError, ResourceNotFoundError } from "@/core/errors";
-import { AnswersRepository } from "../../repositories/answers.repository";
-import { AnswerAttachmentsRepository } from "../../repositories/answer-attachments.repository";
+/* eslint-disable @typescript-eslint/ban-types */
+import { Injectable } from '@nestjs/common';
+import { Either, left, right } from '@/core/either';
+import { UniqueEntityID } from '@/core/entities';
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
+import { AnswersRepository } from '../../repositories/answers.repository';
+import { AnswerAttachmentsRepository } from '../../repositories/answer-attachments.repository';
 import {
   Answer,
   AnswerAttachment,
   AnswerAttachmentList,
-} from "@/domain/forum/enterprise/entities";
+} from '@/domain/forum/enterprise/entities';
 
 interface EditAnswerInput {
   authorId: string;
@@ -18,10 +20,11 @@ interface EditAnswerInput {
 
 type EditAnswerResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
 
+@Injectable()
 export class EditAnswerUseCase {
   constructor(
     private repository: AnswersRepository,
-    private attachmentsRepository: AnswerAttachmentsRepository
+    private attachmentsRepository: AnswerAttachmentsRepository,
   ) {}
 
   async execute({
@@ -33,7 +36,7 @@ export class EditAnswerUseCase {
     const answer = await this.repository.findById(answerId);
 
     if (!answer) {
-      return left(new ResourceNotFoundError("Answer not found"));
+      return left(new ResourceNotFoundError('Answer not found'));
     }
 
     if (authorId != answer.authorId.toString()) {
@@ -53,13 +56,13 @@ export class EditAnswerUseCase {
 
   private async handleAttachments(
     answer: Answer,
-    attachmentIds: string[]
+    attachmentIds: string[],
   ): Promise<AnswerAttachmentList> {
     const currentQuestionAttachments =
       await this.attachmentsRepository.findManyByAnswerId(answer.id.toString());
 
     const questionAttachmentList = new AnswerAttachmentList(
-      currentQuestionAttachments
+      currentQuestionAttachments,
     );
     const questionAttachments = attachmentIds.map((attachmentId) => {
       return AnswerAttachment.create({

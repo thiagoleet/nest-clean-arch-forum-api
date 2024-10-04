@@ -1,6 +1,8 @@
-import { Either, left, right } from "@/core/either";
-import { QuestionsRepository } from "../../repositories/questions.repository";
-import { NotAllowedError, ResourceNotFoundError } from "@/core/errors";
+/* eslint-disable @typescript-eslint/ban-types */
+import { Either, left, right } from '@/core/either';
+import { QuestionsRepository } from '../../repositories/questions.repository';
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
+import { Injectable } from '@nestjs/common';
 
 interface DeleteQuestionInput {
   authorId: string;
@@ -12,6 +14,7 @@ type DeleteQuestionResponse = Either<
   {}
 >;
 
+@Injectable()
 export class DeleteQuestionUseCase {
   constructor(private repository: QuestionsRepository) {}
 
@@ -22,7 +25,7 @@ export class DeleteQuestionUseCase {
     const question = await this.repository.findById(questionId);
 
     if (!question) {
-      return left(new ResourceNotFoundError("Question not found"));
+      return left(new ResourceNotFoundError('Question not found'));
     }
 
     if (authorId != question.authorId.toString()) {
