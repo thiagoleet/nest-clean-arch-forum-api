@@ -10,6 +10,7 @@ import { AnswerQuestionController } from './controllers/answer-question';
 import { AuthenticateController } from './controllers/authenticate';
 import { CreateAccountController } from './controllers/create-account';
 import { CreateQuestionController } from './controllers/create-question';
+import { DeleteAnswerController } from './controllers/delete-answer';
 import { DeleteQuestionController } from './controllers/delete-question';
 import { EditAnswerController } from './controllers/edit-answer';
 import { EditQuestionController } from './controllers/edit-question';
@@ -20,6 +21,7 @@ import { GetQuestionBySlugController } from './controllers/get-question-by-slug'
 import { AnswerQuestionUseCase } from '@/domain/forum/application/use-cases/answer-question';
 import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases/authenticate-student';
 import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question';
+import { DeleteAnswerUseCase } from '@/domain/forum/application/use-cases/delete-answer';
 import { DeleteQuestionUseCase } from '@/domain/forum/application/use-cases/delete-question';
 import { EditAnswerUseCase } from '@/domain/forum/application/use-cases/edit-answer';
 import { EditQuestionUseCase } from '@/domain/forum/application/use-cases/edit-question';
@@ -34,6 +36,7 @@ import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/reg
     AuthenticateController,
     CreateAccountController,
     CreateQuestionController,
+    DeleteAnswerController,
     DeleteQuestionController,
     EditAnswerController,
     EditQuestionController,
@@ -44,6 +47,7 @@ import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/reg
     AnswerQuestionUseCase,
     AuthenticateStudentUseCase,
     CreateQuestionUseCase,
+    DeleteAnswerUseCase,
     DeleteQuestionUseCase,
     EditAnswerUseCase,
     EditQuestionUseCase,
