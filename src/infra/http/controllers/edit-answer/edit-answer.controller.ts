@@ -14,37 +14,36 @@ import { UserPayload } from '@/infra/auth/token.schema';
 
 // Schemas
 import {
-  editQuestionBodySchema,
+  editAnswerBodySchema,
   EditQuestionBodySchema,
-} from './edit-question.schema';
+} from './edit-answer.schema';
 
 // Pipes
 import { ZodValidationPipe } from '../../pipes';
 
 // Use cases
-import { EditQuestionUseCase } from '@/domain/forum/application/use-cases/edit-question';
+import { EditAnswerUseCase } from '@/domain/forum/application/use-cases/edit-answer';
 
-const bodyValidationPipe = new ZodValidationPipe(editQuestionBodySchema);
+const bodyValidationPipe = new ZodValidationPipe(editAnswerBodySchema);
 
-@Controller('/questions/:id')
-export class EditQuestionController {
-  constructor(private useCase: EditQuestionUseCase) {}
+@Controller('/answers/:id')
+export class EditAnswerController {
+  constructor(private useCase: EditAnswerUseCase) {}
 
   @Put()
   @HttpCode(204)
   async handle(
     @CurrentUser() user: UserPayload,
-    @Param('id') questionId: string,
+    @Param('id') answerId: string,
     @Body(bodyValidationPipe) body: EditQuestionBodySchema,
   ) {
-    const { title, content } = body;
+    const { content } = body;
 
     const result = await this.useCase.execute({
-      title,
-      content,
+      answerId,
       authorId: user.sub,
+      content,
       attachmentIds: [],
-      questionId,
     });
 
     if (result.isLeft()) {
