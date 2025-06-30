@@ -13,27 +13,27 @@ import { UserPayload } from '@/infra/auth/token.schema';
 
 // Schemas
 import {
-  commentOnQuestionBodySchema,
-  CommentOnQuestionBodySchema,
-} from './comment-on-question.schema';
+  commentOnAnswerBodySchema,
+  CommentOnAnswerBodySchema,
+} from './comment-on-answer.schema';
 
 // Pipes
 import { ZodValidationPipe } from '../../pipes';
-import { CommentOnQuestionUseCase } from '@/domain/forum/application/use-cases/comment-on-question';
 
 // Use cases
+import { CommentOnAnswerUseCase } from '@/domain/forum/application/use-cases/comment-on-answer';
 
-const bodyValidationPipe = new ZodValidationPipe(commentOnQuestionBodySchema);
+const bodyValidationPipe = new ZodValidationPipe(commentOnAnswerBodySchema);
 
-@Controller('/questions/:questionId/comment')
-export class CommentOnQuestionController {
-  constructor(private useCase: CommentOnQuestionUseCase) {}
+@Controller('/answers/:answerId/comment')
+export class CommentOnAnswerController {
+  constructor(private useCase: CommentOnAnswerUseCase) {}
 
   @Post()
   async handle(
     @CurrentUser() user: UserPayload,
-    @Body(bodyValidationPipe) body: CommentOnQuestionBodySchema,
-    @Param('questionId') questionId: string,
+    @Body(bodyValidationPipe) body: CommentOnAnswerBodySchema,
+    @Param('answerId') answerId: string,
   ) {
     const { content } = body;
     const userId = user.sub;
@@ -41,7 +41,7 @@ export class CommentOnQuestionController {
     const result = await this.useCase.execute({
       content,
       authorId: userId,
-      questionId,
+      answerId,
     });
 
     if (result.isLeft()) {

@@ -8,12 +8,14 @@ import { DatabaseModule } from '@/infra/database/database.module';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { QuestionFactory } from 'test/factories/forum/make-question';
 import { StudentFactory } from 'test/factories/forum/make-sutdent';
+import { AnswerFactory } from 'test/factories/forum/make-answer';
 
-describe('[E2E] CommentOnQuestionController', () => {
+describe('[E2E] CommentOnAnswerController', () => {
   let app: INestApplication;
   let jwt: JwtService;
   let studentFactory: StudentFactory;
   let questionFactory: QuestionFactory;
+  let answerFactory: AnswerFactory;
   let prisma: PrismaService;
 
   beforeAll(async () => {
@@ -27,12 +29,13 @@ describe('[E2E] CommentOnQuestionController', () => {
     jwt = moduleRef.get<JwtService>(JwtService);
     studentFactory = moduleRef.get<StudentFactory>(StudentFactory);
     questionFactory = moduleRef.get<QuestionFactory>(QuestionFactory);
+    answerFactory = moduleRef.get<AnswerFactory>(AnswerFactory);
     prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
   });
 
-  test(`[POST] /questions/:questionId/comment`, async () => {
+  test(`[POST] /answers/:answerId/comment`, async () => {
     const user = await studentFactory.makePrismaStudent({
       name: 'John Doe',
       email: 'johndoe@example.com',
@@ -44,12 +47,18 @@ describe('[E2E] CommentOnQuestionController', () => {
       title: 'Question Created',
     });
 
-    const questionId = question.id.toString();
+    const answer = await answerFactory.makePrismaAnswer({
+      authorId: user.id,
+      content: 'Answer Created',
+      questionId: question.id,
+    });
+
+    const answerId = answer.id.toString();
 
     const accessToken = jwt.sign({ sub: user.id.toString() });
 
     const response = await request(app.getHttpServer())
-      .post(`/questions/${questionId}/comment`)
+      .post(`/answers/${answerId}/comment`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         content: 'New Comment',
