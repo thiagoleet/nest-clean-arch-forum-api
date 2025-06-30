@@ -1,14 +1,19 @@
-import { Answer } from "@/domain/forum/enterprise/entities";
-import { AnswersRepository } from "../../repositories/answers.repository";
+import { Answer } from '@/domain/forum/enterprise/entities';
+import { Either, right } from '@/core/either';
+import { AnswersRepository } from '../../repositories/answers.repository';
 
 interface FetchQuestionAnswersInput {
   page: number;
   questionId: string;
 }
 
-interface FetchQuestionAnswersResponse {
-  answers: Answer[];
-}
+type FetchQuestionAnswersResponse = Either<
+  Error,
+  {
+    answers: Answer[];
+    page: number;
+  }
+>;
 
 export class FetchQuestionAnswersUseCase {
   constructor(private repository: AnswersRepository) {}
@@ -21,6 +26,6 @@ export class FetchQuestionAnswersUseCase {
       page,
     });
 
-    return { answers };
+    return right({ answers, page });
   }
 }
