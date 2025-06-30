@@ -1,8 +1,9 @@
-import { Either, left, right } from "@/core/either";
-import { Question } from "@/domain/forum/enterprise/entities";
-import { QuestionsRepository } from "../../repositories/questions.repository";
-import { AnswersRepository } from "../../repositories/answers.repository";
-import { NotAllowedError, ResourceNotFoundError } from "@/core/errors";
+import { Either, left, right } from '@/core/either';
+import { Question } from '@/domain/forum/enterprise/entities';
+import { QuestionsRepository } from '../../repositories/questions.repository';
+import { AnswersRepository } from '../../repositories/answers.repository';
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
+import { Injectable } from '@nestjs/common';
 
 interface ChooseQuestionBestAnswerInput {
   answerId: string;
@@ -13,10 +14,12 @@ type ChooseQuestionBestAnswerResponse = Either<
   ResourceNotFoundError | NotAllowedError,
   { question: Question }
 >;
+
+@Injectable()
 export class ChooseQuestionBestAnswerUseCase {
   constructor(
     private questionsRepository: QuestionsRepository,
-    private answersRepository: AnswersRepository
+    private answersRepository: AnswersRepository,
   ) {}
 
   async execute({
@@ -26,15 +29,15 @@ export class ChooseQuestionBestAnswerUseCase {
     const answer = await this.answersRepository.findById(answerId);
 
     if (!answer) {
-      return left(new ResourceNotFoundError("Answer not found"));
+      return left(new ResourceNotFoundError('Answer not found'));
     }
 
     const question = await this.questionsRepository.findById(
-      answer.questionId.toString()
+      answer.questionId.toString(),
     );
 
     if (!question) {
-      return left(new ResourceNotFoundError("Question not found"));
+      return left(new ResourceNotFoundError('Question not found'));
     }
 
     if (question.authorId.toString() !== authorId) {
