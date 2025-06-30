@@ -1,12 +1,12 @@
-import { InMemoryAnswersRepository } from "test/repositories/forum/in-memory-answers.repository";
-import { InMemoryQuestionsRepository } from "test/repositories/forum/in-memory-questions.repository";
-import { ChooseQuestionBestAnswerUseCase } from "./choose-question-best-answer";
-import { makeQuestion } from "test/factories/forum/make-question";
-import { UniqueEntityID } from "@/core/entities";
-import { makeAnswer } from "test/factories/forum/make-answer";
-import { NotAllowedError, ResourceNotFoundError } from "@/core/errors";
+import { InMemoryAnswersRepository } from 'test/repositories/forum/in-memory-answers.repository';
+import { InMemoryQuestionsRepository } from 'test/repositories/forum/in-memory-questions.repository';
+import { ChooseQuestionBestAnswerUseCase } from './choose-question-best-answer';
+import { makeQuestion } from 'test/factories/forum/make-question';
+import { UniqueEntityID } from '@/core/entities';
+import { makeAnswer } from 'test/factories/forum/make-answer';
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
 
-describe("ChooseQuestionBestAnswerUseCase", () => {
+describe('ChooseQuestionBestAnswerUseCase', () => {
   let questionsRepository: InMemoryQuestionsRepository;
   let answersRepository: InMemoryAnswersRepository;
   let sut: ChooseQuestionBestAnswerUseCase;
@@ -16,13 +16,13 @@ describe("ChooseQuestionBestAnswerUseCase", () => {
     answersRepository = new InMemoryAnswersRepository();
     sut = new ChooseQuestionBestAnswerUseCase(
       questionsRepository,
-      answersRepository
+      answersRepository,
     );
   });
 
-  it("should be able to choose question best answer", async () => {
+  it('should be able to choose question best answer', async () => {
     const createQuestion = makeQuestion({
-      authorId: new UniqueEntityID("author-1"),
+      authorId: new UniqueEntityID('author-1'),
     });
     await questionsRepository.create(createQuestion);
 
@@ -33,7 +33,7 @@ describe("ChooseQuestionBestAnswerUseCase", () => {
 
     await sut.execute({
       answerId: createAnswer.id.toString(),
-      authorId: "author-1",
+      authorId: 'author-1',
     });
 
     expect(questionsRepository.items[0]).toMatchObject({
@@ -41,9 +41,9 @@ describe("ChooseQuestionBestAnswerUseCase", () => {
     });
   });
 
-  it("should not be able to choose another user question best answer", async () => {
+  it('should not be able to choose another user question best answer', async () => {
     const createQuestion = makeQuestion({
-      authorId: new UniqueEntityID("author-1"),
+      authorId: new UniqueEntityID('author-1'),
     });
     await questionsRepository.create(createQuestion);
 
@@ -54,32 +54,32 @@ describe("ChooseQuestionBestAnswerUseCase", () => {
 
     const result = await sut.execute({
       answerId: createAnswer.id.toString(),
-      authorId: "wrong-author-id",
+      authorId: 'wrong-author-id',
     });
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 
-  it("should not be able to choose a non existent answer", async () => {
+  it('should not be able to choose a non existent answer', async () => {
     const result = await sut.execute({
-      answerId: "invalid-id",
-      authorId: "author-id",
+      answerId: 'invalid-id',
+      authorId: 'author-id',
     });
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toBeInstanceOf(ResourceNotFoundError);
   });
 
-  it("should not be able to choose an answer to a non existent question", async () => {
+  it('should not be able to choose an answer to a non existent question', async () => {
     const createAnswer = makeAnswer({
-      questionId: new UniqueEntityID("question-id"),
+      questionId: new UniqueEntityID('question-id'),
     });
     await answersRepository.create(createAnswer);
 
     const result = await sut.execute({
       answerId: createAnswer.id.toString(),
-      authorId: "author-id",
+      authorId: 'author-id',
     });
 
     expect(result.isLeft()).toBeTruthy();
