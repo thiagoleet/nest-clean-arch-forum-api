@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { QuestionComment } from '@/domain/forum/enterprise/entities';
 import { UniqueEntityID } from '@/core/entities';
 import { QuestionsRepository } from '../../repositories/questions.repository';
@@ -16,6 +17,7 @@ type CommentOnQuestionResponse = Either<
   { comment: QuestionComment }
 >;
 
+@Injectable()
 export class CommentOnQuestionUseCase {
   constructor(
     private questionCommentsRepository: QuestionCommentsRepository,
