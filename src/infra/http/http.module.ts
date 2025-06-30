@@ -16,6 +16,7 @@ import { EditAnswerController } from './controllers/edit-answer';
 import { EditQuestionController } from './controllers/edit-question';
 import { FetchRecentQuestionsController } from './controllers/fetch-recent-questions';
 import { GetQuestionBySlugController } from './controllers/get-question-by-slug';
+import { FetchQuestionAnswersController } from './controllers/fetch-question-answers';
 
 // providers
 import { AnswerQuestionUseCase } from '@/domain/forum/application/use-cases/answer-question';
@@ -28,6 +29,7 @@ import { EditQuestionUseCase } from '@/domain/forum/application/use-cases/edit-q
 import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions';
 import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/getQuestionBySlug';
 import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/register-student';
+import { FetchQuestionAnswersUseCase } from '@/domain/forum/application/use-cases/fetch-question-answers';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -40,6 +42,7 @@ import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/reg
     DeleteQuestionController,
     EditAnswerController,
     EditQuestionController,
+    FetchQuestionAnswersController,
     FetchRecentQuestionsController,
     GetQuestionBySlugController,
   ],
@@ -54,6 +57,7 @@ import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/reg
     FetchRecentQuestionsUseCase,
     GetQuestionBySlugUseCase,
     RegisterStudentUseCase,
+    FetchQuestionAnswersUseCase,
   ],
 })
 export class HttpModule {}

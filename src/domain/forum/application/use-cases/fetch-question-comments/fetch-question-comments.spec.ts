@@ -1,9 +1,9 @@
-import { FetchQuestionCommentsUseCase } from "./fetch-question-comments";
-import { UniqueEntityID } from "@/core/entities";
-import { InMemoryQuestionCommentsRepository } from "test/repositories/forum/in-memory-question-comments.repository";
-import { makeQuestionComment } from "test/factories/forum/make-question-comment";
+import { FetchQuestionCommentsUseCase } from './fetch-question-comments';
+import { UniqueEntityID } from '@/core/entities';
+import { InMemoryQuestionCommentsRepository } from 'test/repositories/forum/in-memory-question-comments.repository';
+import { makeQuestionComment } from 'test/factories/forum/make-question-comment';
 
-describe("FetchQuestionCommentsUseCase", () => {
+describe('FetchQuestionCommentsUseCase', () => {
   let repository: InMemoryQuestionCommentsRepository;
   let sut: FetchQuestionCommentsUseCase;
 
@@ -12,10 +12,10 @@ describe("FetchQuestionCommentsUseCase", () => {
     sut = new FetchQuestionCommentsUseCase(repository);
   });
 
-  it("should be able fetch question comments", async () => {
+  it('should be able fetch question comments', async () => {
     for (let i = 1; i <= 3; i++) {
       const comment = makeQuestionComment({
-        questionId: new UniqueEntityID("question-id"),
+        questionId: new UniqueEntityID('question-id'),
       });
 
       await repository.create(comment);
@@ -23,23 +23,23 @@ describe("FetchQuestionCommentsUseCase", () => {
 
     const { comments } = await sut.execute({
       page: 1,
-      questionId: "question-id",
+      questionId: 'question-id',
     });
 
     expect(comments).toHaveLength(3);
   });
 
-  it("should be able to fetch paginate questions comments", async () => {
+  it('should be able to fetch paginate questions comments', async () => {
     for (let i = 1; i <= 21; i++) {
       const createdAnswer = makeQuestionComment({
-        questionId: new UniqueEntityID("question-id"),
+        questionId: new UniqueEntityID('question-id'),
       });
 
       await repository.create(createdAnswer);
     }
 
     const { comments } = await sut.execute({
-      questionId: "question-id",
+      questionId: 'question-id',
       page: 2,
     });
 

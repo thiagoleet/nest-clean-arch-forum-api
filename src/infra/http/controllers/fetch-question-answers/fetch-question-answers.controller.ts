@@ -17,7 +17,7 @@ import {
 import { FetchQuestionAnswersUseCase } from '@/domain/forum/application/use-cases/fetch-question-answers';
 
 // Presenters
-// import { QuestionPresenter } from '../../presenters/question.presenter';
+import { AnswerPresenter } from '../../presenters/answer.presenter';
 
 @Controller('/questions/:questionId/answers')
 export class FetchQuestionAnswersController {
@@ -43,7 +43,7 @@ export class FetchQuestionAnswersController {
     const { answers } = result.value;
 
     return {
-      answers,
+      answers: answers.map(AnswerPresenter.toHTTP),
       page,
       itemsPerPage,
     };
