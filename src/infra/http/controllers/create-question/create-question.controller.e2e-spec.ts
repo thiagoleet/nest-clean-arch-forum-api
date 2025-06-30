@@ -2,43 +2,40 @@ import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '@/infra/app.module';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { StudentFactory } from 'test/factories/forum/make-sutdent';
+import { DatabaseModule } from '@/infra/database/database.module';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 
 describe('[E2E] CreateQuestionController', () => {
   let app: INestApplication;
-  let prisma: PrismaService;
   let jwt: JwtService;
+  let studentFactory: StudentFactory;
+  let prisma: PrismaService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, DatabaseModule],
+      providers: [StudentFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
-    prisma = moduleRef.get<PrismaService>(PrismaService);
+
     jwt = moduleRef.get<JwtService>(JwtService);
+    studentFactory = moduleRef.get<StudentFactory>(StudentFactory);
+    prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
   });
 
-  test(`/GET questions`, async () => {
-    const user = {
+  test(`[POST] questions`, async () => {
+    const user = await studentFactory.makePrismaStudent({
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',
-    };
-
-    const userCreated = await prisma.user.create({
-      data: {
-        name: user.name,
-        email: user.email,
-        password: await hash(user.password, 8),
-      },
     });
 
-    const accessToken = jwt.sign({ sub: userCreated.id });
+    const accessToken = jwt.sign({ sub: user.id.toString() });
 
     const response = await request(app.getHttpServer())
       .post('/questions')

@@ -1,20 +1,20 @@
 import {
   AnswerAttachment,
   AnswerAttachmentProps,
-} from "@/domain/forum/enterprise/entities";
-import { UniqueEntityID } from "@/core/entities";
+} from '@/domain/forum/enterprise/entities';
+import { UniqueEntityID } from '@/core/entities';
 
 export function makeAnswerAttachment(
   overide: Partial<AnswerAttachmentProps> = {},
-  id?: UniqueEntityID
+  id?: UniqueEntityID,
 ) {
   const attachment = AnswerAttachment.create(
     {
-      answerId: new UniqueEntityID("answer-id"),
-      attachmentId: new UniqueEntityID("attachment-id"),
+      answerId: new UniqueEntityID('answer-id'),
+      attachmentId: new UniqueEntityID('attachment-id'),
       ...overide,
     },
-    id
+    id,
   );
 
   return attachment;
