@@ -2,6 +2,7 @@ import { FetchAnswerCommentsUseCase } from './fetch-answer-comments';
 import { UniqueEntityID } from '@/core/entities';
 import { InMemoryAnswerCommentsRepository } from 'test/repositories/forum/in-memory-answer-comments.repository';
 import { makeAnswerComment } from 'test/factories/forum/make-answer-comment';
+import { AnswerComment } from '@/domain/forum/enterprise/entities';
 
 describe('FetchAnswerCommentsUseCase', () => {
   let repository: InMemoryAnswerCommentsRepository;
@@ -21,10 +22,12 @@ describe('FetchAnswerCommentsUseCase', () => {
       await repository.create(comment);
     }
 
-    const { comments } = await sut.execute({
+    const result = await sut.execute({
       page: 1,
       answerId: 'answer-id',
     });
+
+    const { comments } = result.value as { comments: AnswerComment[] };
 
     expect(comments).toHaveLength(3);
   });
@@ -38,10 +41,12 @@ describe('FetchAnswerCommentsUseCase', () => {
       await repository.create(createdAnswer);
     }
 
-    const { comments } = await sut.execute({
+    const result = await sut.execute({
       answerId: 'answer-id',
       page: 2,
     });
+
+    const { comments } = result.value as { comments: AnswerComment[] };
 
     expect(comments).toHaveLength(1);
   });
