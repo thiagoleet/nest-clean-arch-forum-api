@@ -21,16 +21,16 @@ describe('[E2E] ChooseQuestionBestAnswerController', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, QuestionFactory],
+      providers: [StudentFactory, QuestionFactory, AnswerFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
 
     jwt = moduleRef.get<JwtService>(JwtService);
+    prisma = moduleRef.get<PrismaService>(PrismaService);
     studentFactory = moduleRef.get<StudentFactory>(StudentFactory);
     questionFactory = moduleRef.get<QuestionFactory>(QuestionFactory);
     answerFactory = moduleRef.get<AnswerFactory>(AnswerFactory);
-    prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
   });

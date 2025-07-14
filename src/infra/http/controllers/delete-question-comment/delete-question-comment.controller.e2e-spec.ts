@@ -22,15 +22,20 @@ describe('[E2E] DeleteQuestionCommentController', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, QuestionFactory, AnswerFactory],
+      providers: [
+        AnswerFactory,
+        QuestionCommentFactory,
+        QuestionFactory,
+        StudentFactory,
+      ],
     }).compile();
 
     app = moduleRef.createNestApplication();
 
     jwt = moduleRef.get<JwtService>(JwtService);
+    prisma = moduleRef.get<PrismaService>(PrismaService);
     studentFactory = moduleRef.get<StudentFactory>(StudentFactory);
     questionFactory = moduleRef.get<QuestionFactory>(QuestionFactory);
-    prisma = moduleRef.get<PrismaService>(PrismaService);
     questionCommentFactory = moduleRef.get<QuestionCommentFactory>(
       QuestionCommentFactory,
     );
