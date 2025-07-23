@@ -31,8 +31,6 @@ export class UploadAttachmentController {
     )
     file: Express.Multer.File,
   ) {
-    console.log(file);
-
     const result = await this.usecase.execute({
       fileName: file.originalname,
       fileType: file.mimetype,

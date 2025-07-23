@@ -65,6 +65,7 @@ import { AttachmentsRepository } from '@/domain/forum/application/repositories/a
     QuestionCommentsRepository,
     QuestionsRepository,
     StudentsRepository,
+    AttachmentsRepository,
   ],
 })
 export class DatabaseModule {}
