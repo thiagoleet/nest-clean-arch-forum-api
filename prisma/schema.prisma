@@ -88,8 +88,10 @@ model Comment {
 }
 
 model Attachment {
-  id      String @id @default(uuid())
-  content String
+  id        String   @id @default(uuid())
+  title     String
+  url       String
+  createdAt DateTime @default(now()) @map("created_at")
 
   questionId String? @map("question_id")
   answerId   String? @map("answer_id")
