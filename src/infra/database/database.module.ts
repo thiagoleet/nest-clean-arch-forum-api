@@ -23,6 +23,7 @@ import { AttachmentsRepository } from '@/domain/forum/application/repositories/a
 @Module({
   providers: [
     PrismaService,
+    PrismaQuestionAttachmentsRepository,
     {
       provide: AnswerCommentsRepository,
       useClass: PrismaAnswerCommentsRepository,
