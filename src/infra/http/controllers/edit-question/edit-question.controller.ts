@@ -37,13 +37,13 @@ export class EditQuestionController {
     @Param('id') questionId: string,
     @Body(bodyValidationPipe) body: EditQuestionBodySchema,
   ) {
-    const { title, content } = body;
+    const { title, content, attachments } = body;
 
     const result = await this.useCase.execute({
       title,
       content,
       authorId: user.sub,
-      attachmentIds: [],
+      attachmentIds: attachments,
       questionId,
     });
 

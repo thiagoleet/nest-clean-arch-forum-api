@@ -8,18 +8,27 @@ import { DatabaseModule } from '@/infra/database/database.module';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { QuestionFactory } from 'test/factories/forum/make-question';
 import { StudentFactory } from 'test/factories/forum/make-sutdent';
+import { AttachmentFactory } from 'test/factories/forum/make-attachment';
+import { QuestionAttachmentFactory } from 'test/factories/forum/make-question-attachment';
 
 describe('[E2E] EditQuestionController', () => {
   let app: INestApplication;
   let jwt: JwtService;
   let studentFactory: StudentFactory;
   let questionFactory: QuestionFactory;
+  let attachmentFactory: AttachmentFactory;
+  let questionAttachmentFactory: QuestionAttachmentFactory;
   let prisma: PrismaService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, QuestionFactory],
+      providers: [
+        StudentFactory,
+        QuestionFactory,
+        AttachmentFactory,
+        QuestionAttachmentFactory,
+      ],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -27,6 +36,10 @@ describe('[E2E] EditQuestionController', () => {
     jwt = moduleRef.get<JwtService>(JwtService);
     studentFactory = moduleRef.get<StudentFactory>(StudentFactory);
     questionFactory = moduleRef.get<QuestionFactory>(QuestionFactory);
+    attachmentFactory = moduleRef.get<AttachmentFactory>(AttachmentFactory);
+    questionAttachmentFactory = moduleRef.get<QuestionAttachmentFactory>(
+      QuestionAttachmentFactory,
+    );
     prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
@@ -39,10 +52,25 @@ describe('[E2E] EditQuestionController', () => {
       password: '123456',
     });
 
+    const attachment1 = await attachmentFactory.makePrismaAttachment();
+    const attachment2 = await attachmentFactory.makePrismaAttachment();
+
     const question = await questionFactory.makePrismaQuestion({
       authorId: user.id,
       title: 'Question Created',
     });
+
+    await questionAttachmentFactory.makePrismaAttachment({
+      attachmentId: attachment1.id,
+      questionId: question.id,
+    });
+
+    await questionAttachmentFactory.makePrismaAttachment({
+      attachmentId: attachment2.id,
+      questionId: question.id,
+    });
+
+    const attachment3 = await attachmentFactory.makePrismaAttachment();
 
     const questionId = question.id.toString();
 
@@ -54,6 +82,7 @@ describe('[E2E] EditQuestionController', () => {
       .send({
         title: 'Question Edited',
         content: 'Question Content',
+        attachments: [attachment1.id.toString(), attachment3.id.toString()],
       });
 
     expect(response.statusCode).toBe(204);
@@ -63,6 +92,24 @@ describe('[E2E] EditQuestionController', () => {
     });
 
     expect(questionOnDatabase).toBeTruthy();
+
+    const attachmentsOnDatabase = await prisma.attachment.findMany({
+      where: {
+        questionId: questionOnDatabase?.id,
+      },
+    });
+
+    expect(attachmentsOnDatabase).toHaveLength(2);
+    expect(attachmentsOnDatabase).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: attachment1.id.toString(),
+        }),
+        expect.objectContaining({
+          id: attachment3.id.toString(),
+        }),
+      ]),
+    );
   });
 
   afterAll(async () => {
