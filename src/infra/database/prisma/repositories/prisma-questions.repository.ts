@@ -10,14 +10,14 @@ import { PrismaQuestionAttachmentsRepository } from './prisma-question-attachmen
 export class PrismaQuestionsRepository implements QuestionsRepository {
   constructor(
     private prisma: PrismaService,
-    private questionAttachmentsRepository: PrismaQuestionAttachmentsRepository,
+    private attachmentsRepository: PrismaQuestionAttachmentsRepository,
   ) {}
 
   async create(question: Question): Promise<void> {
     const data = PrismaQuestionMapper.toPersistence(question);
     await this.prisma.question.create({ data });
 
-    await this.questionAttachmentsRepository.createMany(
+    await this.attachmentsRepository.createMany(
       question.attachments.getItems(),
     );
   }
@@ -70,10 +70,8 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
         },
         data,
       }),
-      this.questionAttachmentsRepository.createMany(
-        question.attachments.getNewItems(),
-      ),
-      this.questionAttachmentsRepository.deleteMany(
+      this.attachmentsRepository.createMany(question.attachments.getNewItems()),
+      this.attachmentsRepository.deleteMany(
         question.attachments.getRemovedItems(),
       ),
     ]);

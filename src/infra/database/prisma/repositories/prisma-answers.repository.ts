@@ -4,14 +4,20 @@ import { AnswersRepository } from '@/domain/forum/application/repositories/answe
 import { Answer } from '@/domain/forum/enterprise/entities';
 import { PrismaService } from '../prisma.service';
 import { PrismaAnswerMapper } from '../mappers/prisma-answer.mapper';
+import { PrismaAnswerAttachmentsRepository } from './prisma-answer-attachments.repository';
 
 @Injectable()
 export class PrismaAnswersRepository implements AnswersRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private attachmentsRepository: PrismaAnswerAttachmentsRepository,
+  ) {}
 
   async create(answer: Answer): Promise<void> {
     const data = PrismaAnswerMapper.toPersistence(answer);
     await this.prisma.answer.create({ data });
+
+    await this.attachmentsRepository.createMany(answer.attachments.getItems());
   }
 
   async delete(answer: Answer): Promise<void> {
@@ -57,5 +63,18 @@ export class PrismaAnswersRepository implements AnswersRepository {
       },
       data,
     });
+
+    await Promise.all([
+      this.prisma.question.update({
+        where: {
+          id: data.id,
+        },
+        data,
+      }),
+      this.attachmentsRepository.createMany(answer.attachments.getNewItems()),
+      this.attachmentsRepository.deleteMany(
+        answer.attachments.getRemovedItems(),
+      ),
+    ]);
   }
 }
