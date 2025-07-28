@@ -1,12 +1,12 @@
-import { EditAnswerUseCase } from "./edit-answer";
-import { UniqueEntityID } from "@/core/entities";
-import { NotAllowedError, ResourceNotFoundError } from "@/core/errors";
-import { InMemoryAnswersRepository } from "test/repositories/forum/in-memory-answers.repository";
-import { InMemoryAnswerAttachmentsRepository } from "test/repositories/forum/in-memory-answer-attachments.repository";
-import { makeAnswer } from "test/factories/forum/make-answer";
-import { makeAnswerAttachment } from "test/factories/forum/make-answer-attachment";
+import { EditAnswerUseCase } from './edit-answer';
+import { UniqueEntityID } from '@/core/entities';
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
+import { InMemoryAnswersRepository } from 'test/repositories/forum/in-memory-answers.repository';
+import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/forum/in-memory-answer-attachments.repository';
+import { makeAnswer } from 'test/factories/forum/make-answer';
+import { makeAnswerAttachment } from 'test/factories/forum/make-answer-attachment';
 
-describe("EditAnswerUseCase", () => {
+describe('EditAnswerUseCase', () => {
   let repository: InMemoryAnswersRepository;
   let attachmentsRepository: InMemoryAnswerAttachmentsRepository;
   let sut: EditAnswerUseCase;
@@ -17,9 +17,9 @@ describe("EditAnswerUseCase", () => {
     sut = new EditAnswerUseCase(repository, attachmentsRepository);
   });
 
-  it("should be able to edit an answer", async () => {
+  it('should be able to edit an answer', async () => {
     const newAnswer = makeAnswer({
-      authorId: new UniqueEntityID("author-1"),
+      authorId: new UniqueEntityID('author-1'),
     });
     await repository.create(newAnswer);
 
@@ -29,39 +29,39 @@ describe("EditAnswerUseCase", () => {
         makeAnswerAttachment({
           answerId: newAnswer.id,
           attachmentId: new UniqueEntityID(`attachment-id-${i}`),
-        })
+        }),
       );
     }
 
     await sut.execute({
       answerId: newAnswer.id.toString(),
-      authorId: "author-1",
-      content: "New Content",
-      attachmentIds: ["attachment-id-1", "attachment-id-3"],
+      authorId: 'author-1',
+      content: 'New Content',
+      attachmentIds: ['attachment-id-1', 'attachment-id-3'],
     });
 
     const [item] = repository.items;
 
     expect(item).toMatchObject({
-      content: "New Content",
+      content: 'New Content',
     });
 
     expect(item.attachments.currentItems).toHaveLength(2);
     expect(item.attachments.currentItems).toEqual([
       expect.objectContaining({
-        attachmentId: new UniqueEntityID("attachment-id-1"),
+        attachmentId: new UniqueEntityID('attachment-id-1'),
       }),
       expect.objectContaining({
-        attachmentId: new UniqueEntityID("attachment-id-3"),
+        attachmentId: new UniqueEntityID('attachment-id-3'),
       }),
     ]);
   });
 
-  it("should not be able to edit a question if not found", async () => {
+  it('should not be able to edit a question if not found', async () => {
     const result = await sut.execute({
-      answerId: "invalid-id",
-      authorId: "author-1",
-      content: "New Content",
+      answerId: 'invalid-id',
+      authorId: 'author-1',
+      content: 'New Content',
       attachmentIds: [],
     });
 
@@ -69,20 +69,56 @@ describe("EditAnswerUseCase", () => {
     expect(result.value).toBeInstanceOf(ResourceNotFoundError);
   });
 
-  it("should not allow to edit a question if the authorId is different", async () => {
+  it('should not allow to edit a question if the authorId is different', async () => {
     const newAnswer = makeAnswer({
-      authorId: new UniqueEntityID("author-1"),
+      authorId: new UniqueEntityID('author-1'),
     });
     await repository.create(newAnswer);
 
     const result = await sut.execute({
       answerId: newAnswer.id.toString(),
-      authorId: "wrong-author-id",
-      content: "New Content",
+      authorId: 'wrong-author-id',
+      content: 'New Content',
       attachmentIds: [],
     });
 
     expect(result.isLeft()).toBeTruthy();
     expect(result.value).toBeInstanceOf(NotAllowedError);
+  });
+
+  it('should sync new and removed attachments when editing an answer', async () => {
+    const newAnswer = makeAnswer({
+      authorId: new UniqueEntityID('author-1'),
+      questionId: new UniqueEntityID('question-id'),
+    });
+    await repository.create(newAnswer);
+
+    // Pre populating Attachments Repository
+    for (let i = 1; i <= 2; i++) {
+      await attachmentsRepository.create(
+        makeAnswerAttachment({
+          answerId: newAnswer.id,
+          attachmentId: new UniqueEntityID(`attachment-id-${i}`),
+        }),
+      );
+    }
+
+    const result = await sut.execute({
+      answerId: newAnswer.id.toString(),
+      authorId: 'author-1',
+      content: 'New Content',
+      attachmentIds: ['attachment-id-1', 'attachment-id-3'],
+    });
+
+    expect(result.isRight()).toBeTruthy();
+    expect(attachmentsRepository.items).toHaveLength(2);
+    expect(attachmentsRepository.items).toEqual([
+      expect.objectContaining({
+        attachmentId: new UniqueEntityID('attachment-id-1'),
+      }),
+      expect.objectContaining({
+        attachmentId: new UniqueEntityID('attachment-id-3'),
+      }),
+    ]);
   });
 });
