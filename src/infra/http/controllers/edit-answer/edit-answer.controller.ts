@@ -37,13 +37,13 @@ export class EditAnswerController {
     @Param('id') answerId: string,
     @Body(bodyValidationPipe) body: EditQuestionBodySchema,
   ) {
-    const { content } = body;
+    const { content, attachments } = body;
 
     const result = await this.useCase.execute({
       answerId,
       authorId: user.sub,
       content,
-      attachmentIds: [],
+      attachmentIds: attachments,
     });
 
     if (result.isLeft()) {

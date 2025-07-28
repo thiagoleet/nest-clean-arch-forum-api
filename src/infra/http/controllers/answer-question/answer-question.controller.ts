@@ -35,14 +35,14 @@ export class AnswerQuestionController {
     @Body(bodyValidationPipe) body: AnswerQuestionBodySchema,
     @Param('questionId') questionId: string,
   ) {
-    const { content } = body;
+    const { content, attachments } = body;
     const userId = user.sub;
 
     const result = await this.useCase.execute({
       content,
       authorId: userId,
       questionId,
-      attachmentIds: [],
+      attachmentIds: attachments,
     });
 
     if (result.isLeft()) {
