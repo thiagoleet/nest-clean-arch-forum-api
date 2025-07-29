@@ -15,7 +15,7 @@ import { UserPayload } from '@/infra/auth/token.schema';
 // Schemas
 import {
   editAnswerBodySchema,
-  EditQuestionBodySchema,
+  EditAnswerBodySchema,
 } from './edit-answer.schema';
 
 // Pipes
@@ -35,7 +35,7 @@ export class EditAnswerController {
   async handle(
     @CurrentUser() user: UserPayload,
     @Param('id') answerId: string,
-    @Body(bodyValidationPipe) body: EditQuestionBodySchema,
+    @Body(bodyValidationPipe) body: EditAnswerBodySchema,
   ) {
     const { content, attachments } = body;
 

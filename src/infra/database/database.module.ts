@@ -24,6 +24,7 @@ import { AttachmentsRepository } from '@/domain/forum/application/repositories/a
   providers: [
     PrismaService,
     PrismaQuestionAttachmentsRepository,
+    PrismaAnswerAttachmentsRepository,
     {
       provide: AnswerCommentsRepository,
       useClass: PrismaAnswerCommentsRepository,

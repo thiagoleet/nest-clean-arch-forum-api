@@ -8,18 +8,20 @@ import { DatabaseModule } from '@/infra/database/database.module';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { QuestionFactory } from 'test/factories/forum/make-question';
 import { StudentFactory } from 'test/factories/forum/make-sutdent';
+import { AttachmentFactory } from 'test/factories/forum/make-attachment';
 
 describe('[E2E] AnswerQuestionController', () => {
   let app: INestApplication;
   let jwt: JwtService;
   let studentFactory: StudentFactory;
   let questionFactory: QuestionFactory;
+  let attachmentFactory: AttachmentFactory;
   let prisma: PrismaService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, QuestionFactory],
+      providers: [StudentFactory, QuestionFactory, AttachmentFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -27,6 +29,7 @@ describe('[E2E] AnswerQuestionController', () => {
     jwt = moduleRef.get<JwtService>(JwtService);
     studentFactory = moduleRef.get<StudentFactory>(StudentFactory);
     questionFactory = moduleRef.get<QuestionFactory>(QuestionFactory);
+    attachmentFactory = moduleRef.get<AttachmentFactory>(AttachmentFactory);
     prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
@@ -44,6 +47,9 @@ describe('[E2E] AnswerQuestionController', () => {
       title: 'Question Created',
     });
 
+    const attachment1 = await attachmentFactory.makePrismaAttachment();
+    const attachment2 = await attachmentFactory.makePrismaAttachment();
+
     const questionId = question.id.toString();
 
     const accessToken = jwt.sign({ sub: user.id.toString() });
@@ -53,6 +59,7 @@ describe('[E2E] AnswerQuestionController', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         content: 'New Answer',
+        attachments: [attachment1.id.toString(), attachment2.id.toString()],
       });
 
     expect(response.statusCode).toBe(201);
@@ -62,6 +69,14 @@ describe('[E2E] AnswerQuestionController', () => {
     });
 
     expect(answerOnDatabase).toBeTruthy();
+
+    const attachmentsOnDatabase = await prisma.attachment.findMany({
+      where: {
+        answerId: answerOnDatabase?.id,
+      },
+    });
+
+    expect(attachmentsOnDatabase).toHaveLength(2);
   });
 
   afterAll(async () => {

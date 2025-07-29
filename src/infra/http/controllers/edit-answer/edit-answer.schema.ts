@@ -5,4 +5,4 @@ export const editAnswerBodySchema = z.object({
   attachments: z.array(z.string().uuid()),
 });
 
-export type EditQuestionBodySchema = z.infer<typeof editAnswerBodySchema>;
+export type EditAnswerBodySchema = z.infer<typeof editAnswerBodySchema>;

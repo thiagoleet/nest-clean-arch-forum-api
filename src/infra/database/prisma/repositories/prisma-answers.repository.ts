@@ -65,7 +65,7 @@ export class PrismaAnswersRepository implements AnswersRepository {
     });
 
     await Promise.all([
-      this.prisma.question.update({
+      this.prisma.answer.update({
         where: {
           id: data.id,
         },
