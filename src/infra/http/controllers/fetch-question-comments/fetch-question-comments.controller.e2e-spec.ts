@@ -69,9 +69,11 @@ describe('[E2E] FetchQuestionCommentsController', () => {
       comments: expect.arrayContaining([
         expect.objectContaining({
           content: 'Comment 01',
+          authorName: 'John Doe',
         }),
         expect.objectContaining({
           content: 'Comment 02',
+          authorName: 'John Doe',
         }),
       ]),
     });

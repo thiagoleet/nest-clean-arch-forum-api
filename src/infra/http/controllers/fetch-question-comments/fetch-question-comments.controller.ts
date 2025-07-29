@@ -17,7 +17,7 @@ import {
 import { FetchQuestionCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-question-comments';
 
 // Presenters
-import { CommentPresenter } from '../../presenters/comment.presenter';
+import { CommentWithAuthorPresenter } from '../../presenters/comment-with-author.presenter';
 
 @Controller('/questions/:questionId/comments')
 export class FetchQuestionCommentsController {
@@ -43,7 +43,9 @@ export class FetchQuestionCommentsController {
     const { comments } = result.value;
 
     return {
-      comments: comments.map((comment) => CommentPresenter.toHTTP(comment)),
+      comments: comments.map((comment) =>
+        CommentWithAuthorPresenter.toHTTP(comment),
+      ),
       page,
       itemsPerPage,
     };
