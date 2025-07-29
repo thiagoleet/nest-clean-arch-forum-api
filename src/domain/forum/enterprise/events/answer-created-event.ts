@@ -1,6 +1,6 @@
-import { UniqueEntityID } from "@/core/entities";
-import { DomainEvent } from "@/core/events";
-import { Answer } from "../entities";
+import { UniqueEntityID } from '@/core/entities';
+import { DomainEvent } from '@/core/events';
+import { Answer } from '../entities';
 
 export class AnswerCreatedEvent implements DomainEvent {
   public ocurredAt: Date;
