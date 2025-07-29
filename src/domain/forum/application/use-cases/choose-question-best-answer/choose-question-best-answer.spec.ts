@@ -5,14 +5,29 @@ import { makeQuestion } from 'test/factories/forum/make-question';
 import { UniqueEntityID } from '@/core/entities';
 import { makeAnswer } from 'test/factories/forum/make-answer';
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
+import { InMemoryAttachmentssRepository } from 'test/repositories/forum/in-memory-attachments.repository';
+import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/forum/in-memory-question-attachments.repository';
+import { InMemoryStudentsRepository } from 'test/repositories/forum/in-memory-students.repository';
 
 describe('ChooseQuestionBestAnswerUseCase', () => {
   let questionsRepository: InMemoryQuestionsRepository;
   let answersRepository: InMemoryAnswersRepository;
+  let questionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
+  let attachmentRespository: InMemoryAttachmentssRepository;
+  let studentsRepository: InMemoryStudentsRepository;
   let sut: ChooseQuestionBestAnswerUseCase;
 
   beforeEach(() => {
-    questionsRepository = new InMemoryQuestionsRepository();
+    questionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository();
+    attachmentRespository = new InMemoryAttachmentssRepository();
+    studentsRepository = new InMemoryStudentsRepository();
+
+    questionsRepository = new InMemoryQuestionsRepository(
+      questionAttachmentsRepository,
+      attachmentRespository,
+      studentsRepository,
+    );
+
     answersRepository = new InMemoryAnswersRepository();
     sut = new ChooseQuestionBestAnswerUseCase(
       questionsRepository,

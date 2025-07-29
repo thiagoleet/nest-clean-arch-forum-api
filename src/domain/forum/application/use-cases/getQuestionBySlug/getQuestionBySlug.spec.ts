@@ -12,14 +12,14 @@ import { makeQuestionAttachment } from 'test/factories/forum/make-question-attac
 
 describe('GetQuestionBySlugUseCase', () => {
   let repository: InMemoryQuestionsRepository;
-  let questionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
   let attachmentRespository: InMemoryAttachmentssRepository;
+  let questionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
   let studentsRepository: InMemoryStudentsRepository;
   let sut: GetQuestionBySlugUseCase;
 
   beforeEach(() => {
-    questionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository();
     attachmentRespository = new InMemoryAttachmentssRepository();
+    questionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository();
     studentsRepository = new InMemoryStudentsRepository();
 
     repository = new InMemoryQuestionsRepository(
