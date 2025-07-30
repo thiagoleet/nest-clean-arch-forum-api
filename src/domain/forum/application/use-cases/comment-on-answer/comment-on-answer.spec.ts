@@ -5,14 +5,19 @@ import { UniqueEntityID } from '@/core/entities';
 import { makeAnswer } from 'test/factories/forum/make-answer';
 import { ResourceNotFoundError } from '@/core/errors';
 import { AnswerComment } from '@/domain/forum/enterprise/entities';
+import { InMemoryStudentsRepository } from 'test/repositories/forum/in-memory-students.repository';
 
 describe('CommentOnAnswerUseCase', () => {
   let answerCommentsRepository: InMemoryAnswerCommentsRepository;
   let answersRepository: InMemoryAnswersRepository;
+  let studentsRepository: InMemoryStudentsRepository;
   let sut: CommentOnAnswerUseCase;
 
   beforeEach(() => {
-    answerCommentsRepository = new InMemoryAnswerCommentsRepository();
+    studentsRepository = new InMemoryStudentsRepository();
+    answerCommentsRepository = new InMemoryAnswerCommentsRepository(
+      studentsRepository,
+    );
     answersRepository = new InMemoryAnswersRepository();
     sut = new CommentOnAnswerUseCase(
       answerCommentsRepository,

@@ -3,15 +3,25 @@ import { CreateQuestionUseCase } from './create-question';
 import { Question } from '@/domain/forum/enterprise/entities';
 import { UniqueEntityID } from '@/core/entities';
 import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/forum/in-memory-question-attachments.repository';
+import { InMemoryStudentsRepository } from 'test/repositories/forum/in-memory-students.repository';
+import { InMemoryAttachmentssRepository } from 'test/repositories/forum/in-memory-attachments.repository';
 
 describe('CreateQuestionUseCase', () => {
   let repository: InMemoryQuestionsRepository;
-  let attachmentsRepository: InMemoryQuestionAttachmentsRepository;
+  let questionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
+  let attachmentRepository: InMemoryAttachmentssRepository;
+  let studentsRepository: InMemoryStudentsRepository;
   let sut: CreateQuestionUseCase;
 
   beforeEach(() => {
-    attachmentsRepository = new InMemoryQuestionAttachmentsRepository();
-    repository = new InMemoryQuestionsRepository(attachmentsRepository);
+    studentsRepository = new InMemoryStudentsRepository();
+    attachmentRepository = new InMemoryAttachmentssRepository();
+    questionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository();
+    repository = new InMemoryQuestionsRepository(
+      questionAttachmentsRepository,
+      attachmentRepository,
+      studentsRepository,
+    );
     sut = new CreateQuestionUseCase(repository);
   });
 
@@ -50,8 +60,8 @@ describe('CreateQuestionUseCase', () => {
     const { question } = value as { question: Question };
 
     expect(question.id).toBeTruthy();
-    expect(attachmentsRepository.items).toHaveLength(2);
-    expect(attachmentsRepository.items).toEqual([
+    expect(questionAttachmentsRepository.items).toHaveLength(2);
+    expect(questionAttachmentsRepository.items).toEqual([
       expect.objectContaining({
         attachmentId: new UniqueEntityID('attachment-id-1'),
       }),

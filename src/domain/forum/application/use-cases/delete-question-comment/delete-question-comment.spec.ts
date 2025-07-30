@@ -3,13 +3,16 @@ import { InMemoryQuestionCommentsRepository } from 'test/repositories/forum/in-m
 import { UniqueEntityID } from '@/core/entities';
 import { makeQuestionComment } from 'test/factories/forum/make-question-comment';
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
+import { InMemoryStudentsRepository } from 'test/repositories/forum/in-memory-students.repository';
 
 describe('DeleteQuestionCommentUseCase', () => {
   let repository: InMemoryQuestionCommentsRepository;
+  let studentsRepository: InMemoryStudentsRepository;
   let sut: DeleteQuestionCommentUseCase;
 
   beforeEach(() => {
-    repository = new InMemoryQuestionCommentsRepository();
+    studentsRepository = new InMemoryStudentsRepository();
+    repository = new InMemoryQuestionCommentsRepository(studentsRepository);
     sut = new DeleteQuestionCommentUseCase(repository);
   });
 
