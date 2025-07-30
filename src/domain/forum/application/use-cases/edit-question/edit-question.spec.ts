@@ -5,42 +5,66 @@ import { UniqueEntityID } from '@/core/entities';
 import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
 import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/forum/in-memory-question-attachments.repository';
 import { makeQuestionAttachment } from 'test/factories/forum/make-question-attachment';
+import { InMemoryAttachmentssRepository } from 'test/repositories/forum/in-memory-attachments.repository';
+import { InMemoryStudentsRepository } from 'test/repositories/forum/in-memory-students.repository';
+import { makeStudent } from 'test/factories/forum/make-sutdent';
+import { makeAttachment } from 'test/factories/forum/make-attachment';
 
 describe('EditQuestionUseCase', () => {
   let repository: InMemoryQuestionsRepository;
-  let attachmentsRepository: InMemoryQuestionAttachmentsRepository;
+  let questionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
+  let attachmentRespository: InMemoryAttachmentssRepository;
+  let studentsRepository: InMemoryStudentsRepository;
   let sut: EditQuestionUseCase;
 
   beforeEach(() => {
-    attachmentsRepository = new InMemoryQuestionAttachmentsRepository();
-    repository = new InMemoryQuestionsRepository(attachmentsRepository);
-    sut = new EditQuestionUseCase(repository, attachmentsRepository);
+    questionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository();
+    attachmentRespository = new InMemoryAttachmentssRepository();
+    studentsRepository = new InMemoryStudentsRepository();
+    repository = new InMemoryQuestionsRepository(
+      questionAttachmentsRepository,
+      attachmentRespository,
+      studentsRepository,
+    );
+    sut = new EditQuestionUseCase(repository, questionAttachmentsRepository);
   });
 
   it('should be able to edit a question', async () => {
+    const student = makeStudent({
+      name: 'John Doe',
+    });
+    await studentsRepository.create(student);
+
     const newQuestion = makeQuestion({
       authorId: new UniqueEntityID('author-1'),
+      title: 'Old Title',
+      content: 'Old Content',
     });
     await repository.create(newQuestion);
 
-    // Pre populating Attachments Repository
-    for (let i = 1; i <= 2; i++) {
-      await attachmentsRepository.create(
-        makeQuestionAttachment({
-          questionId: newQuestion.id,
-          attachmentId: new UniqueEntityID(`attachment-id-${i}`),
-        }),
-      );
-    }
+    const attachment = makeAttachment({
+      title: 'Attachment 1',
+    });
 
+    await attachmentRespository.create(attachment);
+
+    const questionAttachment = makeQuestionAttachment({
+      attachmentId: attachment.id,
+      questionId: newQuestion.id,
+    });
+
+    await questionAttachmentsRepository.create(questionAttachment);
+
+    // Act
     await sut.execute({
       questionId: newQuestion.id.toString(),
       authorId: 'author-1',
       title: 'New Title',
       content: 'New Content',
-      attachmentIds: ['attachment-id-1', 'attachment-id-3'],
+      attachmentIds: [attachment.id.toString()],
     });
 
+    // Assert
     const [item] = repository.items;
 
     expect(item).toMatchObject({
@@ -48,13 +72,10 @@ describe('EditQuestionUseCase', () => {
       content: 'New Content',
     });
 
-    expect(item.attachments.currentItems).toHaveLength(2);
+    expect(item.attachments.currentItems).toHaveLength(1);
     expect(item.attachments.currentItems).toEqual([
       expect.objectContaining({
-        attachmentId: new UniqueEntityID('attachment-id-1'),
-      }),
-      expect.objectContaining({
-        attachmentId: new UniqueEntityID('attachment-id-3'),
+        attachmentId: attachment.id,
       }),
     ]);
   });
@@ -91,37 +112,75 @@ describe('EditQuestionUseCase', () => {
   });
 
   it('should sync new and removed attachments when editing a question', async () => {
+    const student = makeStudent({
+      name: 'John Doe',
+    });
+    await studentsRepository.create(student);
+
     const newQuestion = makeQuestion({
       authorId: new UniqueEntityID('author-1'),
+      title: 'Old Title',
+      content: 'Old Content',
     });
     await repository.create(newQuestion);
 
-    // Pre populating Attachments Repository
-    for (let i = 1; i <= 2; i++) {
-      await attachmentsRepository.create(
-        makeQuestionAttachment({
-          questionId: newQuestion.id,
-          attachmentId: new UniqueEntityID(`attachment-id-${i}`),
-        }),
-      );
-    }
+    const attachment1 = makeAttachment({
+      title: 'Attachment 1',
+    });
+    const attachment2 = makeAttachment({
+      title: 'Attachment 2',
+    });
+
+    await Promise.all([
+      attachmentRespository.create(attachment1),
+      attachmentRespository.create(attachment2),
+    ]);
+
+    const questionAttachment1 = makeQuestionAttachment({
+      attachmentId: attachment1.id,
+      questionId: newQuestion.id,
+    });
+    const questionAttachment2 = makeQuestionAttachment({
+      attachmentId: attachment2.id,
+      questionId: newQuestion.id,
+    });
+
+    await Promise.all([
+      questionAttachmentsRepository.create(questionAttachment1),
+      questionAttachmentsRepository.create(questionAttachment2),
+    ]);
+
+    const attachment3 = makeAttachment({
+      title: 'Attachment 3',
+    });
+    await attachmentRespository.create(attachment3);
+
+    const questionAttachment3 = makeQuestionAttachment({
+      attachmentId: attachment3.id,
+      questionId: newQuestion.id,
+    });
+
+    await questionAttachmentsRepository.create(questionAttachment3);
 
     const result = await sut.execute({
       questionId: newQuestion.id.toString(),
       authorId: 'author-1',
       title: 'New Title',
       content: 'New Content',
-      attachmentIds: ['attachment-id-1', 'attachment-id-3'],
+      attachmentIds: [attachment1.id.toString(), attachment3.id.toString()],
     });
 
     expect(result.isRight()).toBeTruthy();
-    expect(attachmentsRepository.items).toHaveLength(2);
-    expect(attachmentsRepository.items).toEqual([
+
+    const [item] = repository.items;
+
+    expect(item.attachments.currentItems).toHaveLength(2);
+    expect(item.attachments.currentItems).toEqual([
       expect.objectContaining({
-        attachmentId: new UniqueEntityID('attachment-id-1'),
+        attachmentId: attachment1.id,
       }),
       expect.objectContaining({
-        attachmentId: new UniqueEntityID('attachment-id-3'),
+        attachmentId: attachment3.id,
       }),
     ]);
   });
