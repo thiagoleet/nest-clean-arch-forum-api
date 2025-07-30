@@ -2,13 +2,26 @@ import { InMemoryQuestionsRepository } from 'test/repositories/forum/in-memory-q
 import { makeQuestion } from 'test/factories/forum/make-question';
 import { FetchRecentQuestionsUseCase } from './fetch-recent-questions';
 import { Question } from '@/domain/forum/enterprise/entities';
+import { InMemoryAttachmentssRepository } from 'test/repositories/forum/in-memory-attachments.repository';
+import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/forum/in-memory-question-attachments.repository';
+import { InMemoryStudentsRepository } from 'test/repositories/forum/in-memory-students.repository';
 
 describe('FetchRecentQuestionsUseCase', () => {
   let repository: InMemoryQuestionsRepository;
+  let questionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
+  let attachmentRespository: InMemoryAttachmentssRepository;
+  let studentsRepository: InMemoryStudentsRepository;
   let sut: FetchRecentQuestionsUseCase;
 
   beforeEach(() => {
-    repository = new InMemoryQuestionsRepository();
+    questionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository();
+    attachmentRespository = new InMemoryAttachmentssRepository();
+    studentsRepository = new InMemoryStudentsRepository();
+    repository = new InMemoryQuestionsRepository(
+      questionAttachmentsRepository,
+      attachmentRespository,
+      studentsRepository,
+    );
     sut = new FetchRecentQuestionsUseCase(repository);
   });
 
