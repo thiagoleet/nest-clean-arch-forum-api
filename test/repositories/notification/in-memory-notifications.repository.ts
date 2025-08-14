@@ -1,5 +1,5 @@
-import { NotificationsRepository } from "@/domain/notification/application/repositories/notifications.repository";
-import { Notification } from "@/domain/notification/enterprise/entities";
+import { NotificationsRepository } from '@/domain/notification/application/repositories/notifications.repository';
+import { Notification } from '@/domain/notification/enterprise/entities';
 
 export class InMemoryNotificationsRepository
   implements NotificationsRepository
@@ -27,7 +27,7 @@ export class InMemoryNotificationsRepository
 
   async save(notification: Notification): Promise<void> {
     const index = this._items.findIndex(
-      (item) => item.id.toString() === notification.id.toString()
+      (item) => item.id.toString() === notification.id.toString(),
     );
 
     if (index >= 0) {
