@@ -1,7 +1,8 @@
-import { Either, left, right } from "@/core/either";
-import { NotAllowedError, ResourceNotFoundError } from "@/core/errors";
-import { NotificationsRepository } from "../../repositories/notifications.repository";
-import { Notification } from "@/domain/notification/enterprise/entities";
+import { Either, left, right } from '@/core/either';
+import { NotAllowedError, ResourceNotFoundError } from '@/core/errors';
+import { NotificationsRepository } from '../../repositories/notifications.repository';
+import { Notification } from '@/domain/notification/enterprise/entities';
+import { Injectable } from '@nestjs/common';
 
 interface ReadNotificationInput {
   receipientId: string;
@@ -13,6 +14,7 @@ type ReadNotificationResponse = Either<
   { notification: Notification }
 >;
 
+@Injectable()
 export class ReadNotificationUseCase {
   constructor(private repository: NotificationsRepository) {}
 
@@ -23,12 +25,12 @@ export class ReadNotificationUseCase {
     const notification = await this.repository.findById(notificationId);
 
     if (!notification) {
-      return left(new ResourceNotFoundError("Notification not found"));
+      return left(new ResourceNotFoundError('Notification not found'));
     }
 
     if (notification.recipientId.toString() !== receipientId) {
       return left(
-        new NotAllowedError("You are not allowed to read this notification")
+        new NotAllowedError('You are not allowed to read this notification'),
       );
     }
 
