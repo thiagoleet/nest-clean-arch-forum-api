@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 import { execSync } from 'node:child_process';
+import { DomainEvents } from '@/core/events';
 
 // Load environment variables from .env files
 config({ path: '.env', override: true });
@@ -37,6 +38,8 @@ beforeAll(async () => {
   const databaseURL = generateUniqueDatabaseURL(schemaId);
 
   process.env.DATABASE_URL = databaseURL;
+
+  DomainEvents.shouldRun = false;
 
   execSync('npx prisma migrate deploy');
 });

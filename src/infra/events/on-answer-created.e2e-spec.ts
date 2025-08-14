@@ -9,6 +9,7 @@ import { QuestionFactory } from 'test/factories/forum/make-question';
 import { AppModule } from '../app.module';
 import { DatabaseModule } from '../database/database.module';
 import { waitFor } from 'test/utils/wait-for';
+import { DomainEvents } from '@/core/events/domain-events';
 
 describe('[E2E] On Answer Created', () => {
   let app: INestApplication;
@@ -19,6 +20,8 @@ describe('[E2E] On Answer Created', () => {
   let prisma: PrismaService;
 
   beforeAll(async () => {
+    DomainEvents.shouldRun = true;
+
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
       providers: [StudentFactory, QuestionFactory],

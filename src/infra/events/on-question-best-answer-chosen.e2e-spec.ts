@@ -12,6 +12,7 @@ import { PrismaService } from '../database/prisma/prisma.service';
 import { DatabaseModule } from '../database/database.module';
 import { AppModule } from '../app.module';
 import { waitFor } from 'test/utils/wait-for';
+import { DomainEvents } from '@/core/events';
 
 describe('[E2E] On Question Best Answer Chosen', () => {
   let app: INestApplication;
@@ -22,6 +23,8 @@ describe('[E2E] On Question Best Answer Chosen', () => {
   let prisma: PrismaService;
 
   beforeAll(async () => {
+    DomainEvents.shouldRun = true;
+
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
       providers: [StudentFactory, QuestionFactory, AnswerFactory],
