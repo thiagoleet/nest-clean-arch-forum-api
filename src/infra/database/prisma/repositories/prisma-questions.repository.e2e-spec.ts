@@ -46,6 +46,10 @@ describe('[E2E] PrismaQuestionsRepository', () => {
     await app.init();
   });
 
+  afterAll(async () => {
+    await app.close();
+  });
+
   it('should cache question details', async () => {
     const user = await studentFactory.makePrismaStudent();
 
@@ -70,7 +74,61 @@ describe('[E2E] PrismaQuestionsRepository', () => {
     expect(cached).toEqual(JSON.stringify(questionDetails));
   });
 
-  afterAll(async () => {
-    await app.close();
+  it('should return cached question details on subsequent calls', async () => {
+    const user = await studentFactory.makePrismaStudent();
+
+    const question = await questionFactory.makePrismaQuestion({
+      authorId: user.id,
+      slug: Slug.create('cached-question-created'),
+      title: 'Question Created',
+    });
+
+    const attachment = await attachmentFactory.makePrismaAttachment();
+
+    await questionAttachmentFactory.makePrismaAttachment({
+      questionId: question.id,
+      attachmentId: attachment.id,
+    });
+
+    const slug = question.slug.value;
+    await cacheRepository.set(
+      `question:${slug}:details`,
+      JSON.stringify({ empty: true }),
+    );
+
+    const questionDetails = await questionsRepository.findDetailsBySlug(slug);
+
+    expect(questionDetails).toEqual({ empty: true });
+  });
+
+  it('should reset question details when saving the question', async () => {
+    const user = await studentFactory.makePrismaStudent();
+
+    const question = await questionFactory.makePrismaQuestion({
+      authorId: user.id,
+      slug: Slug.create('cached-question-invalidated'),
+      title: 'Question Created',
+    });
+
+    const attachment = await attachmentFactory.makePrismaAttachment();
+
+    await questionAttachmentFactory.makePrismaAttachment({
+      questionId: question.id,
+      attachmentId: attachment.id,
+    });
+
+    const slug = question.slug.value;
+
+    await cacheRepository.set(
+      `question:${slug}:details`,
+      JSON.stringify({ empty: true }),
+    );
+
+    await questionsRepository.save(question);
+
+    const questionDetails = await questionsRepository.findDetailsBySlug(slug);
+    const cached = await cacheRepository.get(`question:${slug}:details`);
+
+    expect(cached).toEqual(JSON.stringify(questionDetails));
   });
 });
