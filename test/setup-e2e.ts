@@ -27,11 +27,11 @@ function generateUniqueDatabaseURL(schemaId: string) {
     throw new Error('schemaId is required');
   }
 
-  if (!process.env.DATABASE_URL) {
+  if (!env.DATABASE_URL) {
     throw new Error('DATABASE_URL is not set');
   }
 
-  const url = new URL(process.env.DATABASE_URL);
+  const url = new URL(env.DATABASE_URL);
 
   url.searchParams.set('schema', schemaId);
 
