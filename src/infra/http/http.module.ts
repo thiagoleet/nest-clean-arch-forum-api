@@ -37,7 +37,7 @@ import { DeleteQuestionUseCase } from '@/domain/forum/application/use-cases/dele
 import { EditAnswerUseCase } from '@/domain/forum/application/use-cases/edit-answer';
 import { EditQuestionUseCase } from '@/domain/forum/application/use-cases/edit-question';
 import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions';
-import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/getQuestionBySlug';
+import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/get-question-by-slug';
 import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/register-student';
 import { FetchQuestionAnswersUseCase } from '@/domain/forum/application/use-cases/fetch-question-answers';
 import { ChooseQuestionBestAnswerUseCase } from '@/domain/forum/application/use-cases/choose-question-best-answer';

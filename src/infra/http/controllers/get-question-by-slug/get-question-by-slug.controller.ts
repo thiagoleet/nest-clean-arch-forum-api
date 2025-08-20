@@ -2,7 +2,7 @@
 import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
 
 // Use cases
-import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/getQuestionBySlug';
+import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/get-question-by-slug';
 
 // Presenters
 import { QuestionDetailsPresenter } from '../../presenters/question-details.presenter';

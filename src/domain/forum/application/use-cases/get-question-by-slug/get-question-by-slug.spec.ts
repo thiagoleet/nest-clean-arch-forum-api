@@ -1,5 +1,5 @@
 import { InMemoryQuestionsRepository } from 'test/repositories/forum/in-memory-questions.repository';
-import { GetQuestionBySlugUseCase } from './getQuestionBySlug';
+import { GetQuestionBySlugUseCase } from './get-question-by-slug';
 import { makeQuestion } from 'test/factories/forum/make-question';
 import { ResourceNotFoundError } from '@/core/errors';
 import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/forum/in-memory-question-attachments.repository';
