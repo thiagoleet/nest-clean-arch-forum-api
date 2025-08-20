@@ -126,9 +126,8 @@ describe('[E2E] PrismaQuestionsRepository', () => {
 
     await questionsRepository.save(question);
 
-    const questionDetails = await questionsRepository.findDetailsBySlug(slug);
     const cached = await cacheRepository.get(`question:${slug}:details`);
 
-    expect(cached).toEqual(JSON.stringify(questionDetails));
+    expect(cached).toBeNull();
   });
 });
