@@ -63,7 +63,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 
     if (cachedHit) {
       const cachedQuestion = JSON.parse(cachedHit);
-      return cachedQuestion;
+      return PrismaQuestionDetailsMapper.toDomain(cachedQuestion);
     }
 
     const question = await this.prisma.question.findUnique({
@@ -78,11 +78,8 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
       return null;
     }
 
+    await this.cache.set(`question:${slug}:details`, JSON.stringify(question));
     const questionDetails = PrismaQuestionDetailsMapper.toDomain(question);
-    await this.cache.set(
-      `question:${slug}:details`,
-      JSON.stringify(questionDetails),
-    );
 
     return questionDetails;
   }
