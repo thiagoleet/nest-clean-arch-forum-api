@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { PrismaService } from './prisma/prisma.service';
 
+// Use Class
 import { PrismaAnswerAttachmentsRepository } from './prisma/repositories/prisma-answer-attachments.repository';
 import { PrismaAnswerCommentsRepository } from './prisma/repositories/prisma-answer-comments.repository';
 import { PrismaAnswersRepository } from './prisma/repositories/prisma-answers.repository';
@@ -12,6 +13,7 @@ import { PrismaStudentsRepository } from './prisma/repositories/prisma-students.
 import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attachments.repository';
 import { PrismaNotificationsRepository } from './prisma/repositories/prisma-notifications.repository';
 
+// Providers
 import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments.repository';
 import { AnswerCommentsRepository } from '@/domain/forum/application/repositories/answer-comments.repository';
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers.repository';
@@ -22,7 +24,11 @@ import { StudentsRepository } from '@/domain/forum/application/repositories/stud
 import { AttachmentsRepository } from '@/domain/forum/application/repositories/attachments.repository';
 import { NotificationsRepository } from '@/domain/notification/application/repositories/notifications.repository';
 
+// Imports
+import { CacheModule } from '../cache/cache.module';
+
 @Module({
+  imports: [CacheModule],
   providers: [
     PrismaService,
     PrismaQuestionAttachmentsRepository,
